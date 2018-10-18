@@ -8,6 +8,13 @@
 /build
 /captures
 
+# IDEA/Android Studio project files, because
+# the project can be imported from settings.gradle
+*.iml
+.idea/*
+!.idea/copyright
+!.idea/codeStyles/codeStyleConfig.xml
+
 # Created by https://www.gitignore.io/api/macos,android,windows,androidstudio
 
 ### Android ###
