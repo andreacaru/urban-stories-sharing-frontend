@@ -53,6 +53,8 @@ public class PostActivity extends AppCompatActivity {
         setSupportActionBar(myToolbar);
     }
 
+
+
     protected void goToHome(View view) {
         finish();
     }
@@ -112,10 +114,6 @@ public class PostActivity extends AppCompatActivity {
             }
             // Continue only if the File was successfully created
             if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(this,
-                        "com.example.andreacarubelli.urbanstoriessharing.fileprovider",
-                        photoFile);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
             }
         }
@@ -130,23 +128,18 @@ public class PostActivity extends AppCompatActivity {
     }
 
     private File createImageFile () throws IOException {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        File root = new File(Environment.getExternalStorageDirectory().toString());
-        File myDir = new File(root + "/Urban_stories_sharing/" + timeStamp + "/Pictures");
-        if (!myDir.exists()) {
-            myDir.mkdirs();
-        }
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                myDir      /* directory */
-        );
-
-        // Save a file: path for use with ACTION_VIEW intents
-        mCurrentPhotoPath = image.getAbsolutePath();
+        SavingOfFile folderFileImage = new SavingOfFile();
+        File image = folderFileImage.createImageFileFolder();
         return image;
+    }
+
+    public interface FileInformation {
+        String ROOT_FOLDER = "Urban_stories_sharing";
+        String NOTES_FOLDER ="Notes_folder";
+        String PICTURES = "Pictures";
+        String VIDEOS = "Videos";
+        String NOTES = "Notes";
+        String AUDIO = "Audio";
     }
 
 }
