@@ -68,7 +68,7 @@
 
     </android.support.design.widget.TextInputLayout>
 
-        <LinearLayout
+    <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -93,7 +93,7 @@
 
         </LinearLayout>
 
-        <LinearLayout
+    <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -138,11 +138,12 @@
             app:fabIcon="@drawable/plus"
             app:fabText="@string/stringAudio"
             app:fabTextAllCaps="true"
-            app:fabType="roundedSquare" />
+            app:fabType="roundedSquare"
+            android:onClick="goToMicrophone"/>
 
     </LinearLayout>
 
-        <LinearLayout
+    <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -164,6 +165,6 @@
                 app:fabIcon="@drawable/plus"
                 app:fabColor="@color/colorButton" />
 
-        </LinearLayout>
+    </LinearLayout>
 
 </LinearLayout>

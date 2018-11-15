@@ -36,6 +36,7 @@ public class PostActivity extends AppCompatActivity {
     public static final int REQUEST_TAKE_PHOTO = 1;
     public static final int CAMERA_PERMISSION = 123;
     public static final int STORAGE_PERMISSION = 125;
+
     private boolean mCameraPermissionGranted, mStoragePermissionGranted;
     ImageView mImageView;
 
@@ -54,6 +55,14 @@ public class PostActivity extends AppCompatActivity {
     }
 
 
+    public interface FileInformation {
+        String ROOT_FOLDER = "Urban_stories_sharing";
+        String NOTES_FOLDER ="Notes_folder";
+        String PICTURES = "Pictures";
+        String VIDEOS = "Videos";
+        String NOTES = "Notes";
+        String AUDIO = "Audio";
+    }
 
     protected void goToHome(View view) {
         finish();
@@ -133,13 +142,10 @@ public class PostActivity extends AppCompatActivity {
         return image;
     }
 
-    public interface FileInformation {
-        String ROOT_FOLDER = "Urban_stories_sharing";
-        String NOTES_FOLDER ="Notes_folder";
-        String PICTURES = "Pictures";
-        String VIDEOS = "Videos";
-        String NOTES = "Notes";
-        String AUDIO = "Audio";
+    public void goToMicrophone(View v){
+        Intent intent = new Intent (this, MicrophoneActivity.class);
+        startActivity(intent);
+
     }
 
 }
