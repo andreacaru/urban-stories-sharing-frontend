@@ -6,4 +6,6 @@
     <string name="stringVideo">Video</string>
     <string name="stringAudio">Nota vocale</string>
     <string name="stringNote">Nota scritta</string>
+    <string name="stringRegistra">Tieni premuto per registrare</string>
+    <string name="stringInvia">INVIA</string>
 </resources>

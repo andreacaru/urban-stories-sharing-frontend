@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 
 import com.google.android.gms.location.LocationServices;
@@ -26,6 +27,8 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+
+import java.util.Map;
 
 /**
  * An activity that displays a map showing the place at the device's current location.
@@ -79,11 +82,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-    }
 
-    protected void goToPost(View view){
-        Intent intent = new Intent (this, PostActivity.class);
-        startActivity(intent);
+        final Button myButton = findViewById(R.id.buttonPost);
+        myButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent (view.getContext(), PostActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     /** When the map is created, this method works on the map, move of the camera etc. */
@@ -163,6 +170,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         try {
             if (mLocationPermissionGranted) {
                 Task locationResult = mFusedLocationProviderClient.getLastLocation();
+                if (mLastKnownLocation == null) {
+                    Toast.makeText(getApplicationContext(),"Sto caricando la posizione...", Toast.LENGTH_SHORT).show();
+                }
                 locationResult.addOnCompleteListener(this, new OnCompleteListener() {
                     @Override
                     public void onComplete(@NonNull Task task) {

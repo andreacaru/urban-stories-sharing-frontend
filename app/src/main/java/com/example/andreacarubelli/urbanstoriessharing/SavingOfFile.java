@@ -1,5 +1,6 @@
 package com.example.andreacarubelli.urbanstoriessharing;
 
+import android.content.Context;
 import android.media.MediaScannerConnection;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
@@ -9,34 +10,26 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class SavingOfFile extends AppCompatActivity implements PostActivity.FileInformation{
+public class SavingOfFile extends AppCompatActivity implements FileInformation{
 
-    private String getFolderName () {
-        String folderName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        return folderName;
-    }
-
-    int i = 0;
-    String folderName = getFolderName();
-
-    public void createFolder(){
+    public void createFolder(Context context) {
         File globalNotesFolder = new File(Environment.getExternalStorageDirectory().getPath() + "/" +
-                PostActivity.FileInformation.ROOT_FOLDER + "/" + PostActivity.FileInformation.NOTES_FOLDER);
+                FileInformation.ROOT_FOLDER + "/" + FileInformation.NOTES_FOLDER);
 
-        globalNotesFolder.mkdir();
-        File notesFolder = new File(globalNotesFolder.getPath() + "/" + folderName);
-        MediaScannerConnection.scanFile(this, new String[] {notesFolder.toString()}, null, null);
+        if (!globalNotesFolder.exists()) {
+            globalNotesFolder.mkdir();
+            MediaScannerConnection.scanFile(context, new String[]{globalNotesFolder.toString()}, null, null);
+        }
     }
 
-    public File createImageFileFolder() throws IOException {
+    public File createImageFileFolder(Context context, String folderName, int numImg) throws IOException {
         File imageFolder = new File(Environment.getExternalStorageDirectory().getPath() + "/" +
-                PostActivity.FileInformation.ROOT_FOLDER + "/" + PostActivity.FileInformation.NOTES_FOLDER + "/" + folderName + PostActivity.FileInformation.PICTURES);
+                FileInformation.ROOT_FOLDER + "/" + FileInformation.NOTES_FOLDER + "/" + folderName + "/" + FileInformation.PICTURES);
         if(!imageFolder.exists()) {
             imageFolder.mkdir();
-            MediaScannerConnection.scanFile(this, new String[]{imageFolder.toString()}, null, null);
+            MediaScannerConnection.scanFile(context, new String[]{imageFolder.toString()}, null, null);
         }
-        String imageFileName = "JPEG_" + i + "_";
-        i++;
+        String imageFileName = "JPEG_" + numImg + "_";
         String ImageFilePath = imageFolder + File.separator + imageFileName;
         File image = File.createTempFile(
                 imageFileName,  /* prefix */

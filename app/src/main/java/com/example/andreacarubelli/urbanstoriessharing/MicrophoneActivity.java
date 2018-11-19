@@ -18,6 +18,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import java.io.IOException;
 
@@ -28,7 +29,8 @@ public class MicrophoneActivity extends AppCompatActivity {
     private String[] permissions = {Manifest.permission.RECORD_AUDIO};
     private MediaRecorder mRecorder = null;
     private static final String LOG_TAG = "AudioRecordTest";
-    private static String mFileName = null;
+    int i;
+    private static String mFileName = "Registrazione vocale" ;
     ImageButton btnMic;
 
 
@@ -36,28 +38,19 @@ public class MicrophoneActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_microphone);
+
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar_activity_mic);
         setSupportActionBar(myToolbar);
         getSupportActionBar().setTitle(null);
-        btnMic = (ImageButton) findViewById(R.id.micImageButton);
-    }
 
-    protected void goBack(View view) {
-        finish();
-    }
+        ImageView backArrow = (ImageView) findViewById(R.id.freccia_indietro);
+        backArrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
 
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case RECORD_PERMISSION:
-                mRecordPermissionGranted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
-                break;
-        }
-        if (!mRecordPermissionGranted) finish();
-
-    }
-
-    public void onTouchMicButton(View v){
         ImageButton myButton = (ImageButton) findViewById(R.id.micImageButton);
         myButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -70,7 +63,8 @@ public class MicrophoneActivity extends AppCompatActivity {
                         mRecorder = new MediaRecorder();
                         mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
                         mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-                        mRecorder.setOutputFile(mFileName);
+                        mRecorder.setOutputFile(mFileName + i);
+                        i++;
                         mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
 
                         try {
@@ -93,6 +87,16 @@ public class MicrophoneActivity extends AppCompatActivity {
 
     }
 
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case RECORD_PERMISSION:
+                mRecordPermissionGranted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                break;
+        }
+        if (!mRecordPermissionGranted) finish();
+
+    }
 
 }
 

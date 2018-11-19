@@ -1,6 +1,7 @@
 package com.example.andreacarubelli.urbanstoriessharing;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -42,30 +43,27 @@ public class PostActivity extends AppCompatActivity {
 
     static final int REQUEST_VIDEO_CAPTURE = 1;
 
-    Bitmap bitmap;
+    String folderName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 
-    String mCurrentPhotoPath;
+    int numImg;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
+
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
-    }
 
+        ImageView backArrow = (ImageView) findViewById(R.id.freccia_indietro);
+        backArrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
 
-    public interface FileInformation {
-        String ROOT_FOLDER = "Urban_stories_sharing";
-        String NOTES_FOLDER ="Notes_folder";
-        String PICTURES = "Pictures";
-        String VIDEOS = "Videos";
-        String NOTES = "Notes";
-        String AUDIO = "Audio";
-    }
-
-    protected void goToHome(View view) {
-        finish();
     }
 
     private void getCameraPermission() {
@@ -117,7 +115,8 @@ public class PostActivity extends AppCompatActivity {
             File photoFile = null;
             try {
                 isStoragePermissionGranted();
-                photoFile = createImageFile();
+                photoFile = createImageFile(this, folderName, numImg);
+                numImg++;
             } catch (IOException ex) {
                 // Error occurred while creating the File
             }
@@ -136,9 +135,11 @@ public class PostActivity extends AppCompatActivity {
         }
     }
 
-    private File createImageFile () throws IOException {
+
+    private File createImageFile (Context context, String folderName, int numImg) throws IOException {
         SavingOfFile folderFileImage = new SavingOfFile();
-        File image = folderFileImage.createImageFileFolder();
+        folderFileImage.createFolder(context);
+        File image = folderFileImage.createImageFileFolder(context, folderName, numImg);
         return image;
     }
 
