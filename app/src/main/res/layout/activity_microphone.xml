@@ -30,30 +30,41 @@
 
     </android.support.v7.widget.Toolbar>
 
+    <ImageButton
+        android:id="@+id/micImageButton"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="50dp"
+        android:adjustViewBounds="true"
+        android:background="@drawable/rounded_image_button_microphone"
+        android:padding="20dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_mic_black_24dp" />
+
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true">
 
         <ImageButton
-            android:id="@+id/micImageButton"
-            android:background="@drawable/rounded_image_button_microphone"
-            android:layout_width="160dp"
-            android:layout_height="160dp"
-            android:layout_centerInParent="true"
-            android:padding="20dp"
-            android:scaleType="fitCenter"
-            android:adjustViewBounds="true"
-            android:src="@drawable/ic_mic_black_24dp" />
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_alignParentTop="true"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="69dp"
+            android:layout_marginTop="20dp"
+            android:src="@drawable/ic_play_arrow_black_24dp"></ImageButton>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="121dp"
-            android:text="@string/stringRegistra" />
+        <ImageButton
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="20dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginRight="69dp"
+            android:src="@drawable/ic_stop_black_24dp"></ImageButton>
 
     </RelativeLayout>
-
 
 </LinearLayout>

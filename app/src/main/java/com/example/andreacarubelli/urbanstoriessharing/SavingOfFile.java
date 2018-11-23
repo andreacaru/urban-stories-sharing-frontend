@@ -2,7 +2,9 @@ package com.example.andreacarubelli.urbanstoriessharing;
 
 import android.content.Context;
 import android.media.MediaScannerConnection;
+import android.net.Uri;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 
 import java.io.File;
@@ -10,33 +12,73 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class SavingOfFile extends AppCompatActivity implements FileInformation{
-
-    public void createFolder(Context context) {
-        File globalNotesFolder = new File(Environment.getExternalStorageDirectory().getPath() + "/" +
-                FileInformation.ROOT_FOLDER + "/" + FileInformation.NOTES_FOLDER);
-
-        if (!globalNotesFolder.exists()) {
-            globalNotesFolder.mkdir();
-            MediaScannerConnection.scanFile(context, new String[]{globalNotesFolder.toString()}, null, null);
-        }
-    }
+public class SavingOfFile implements FileInformation{
 
     public File createImageFileFolder(Context context, String folderName, int numImg) throws IOException {
         File imageFolder = new File(Environment.getExternalStorageDirectory().getPath() + "/" +
-                FileInformation.ROOT_FOLDER + "/" + FileInformation.NOTES_FOLDER + "/" + folderName + "/" + FileInformation.PICTURES);
+                FileInformation.ROOT_FOLDER + "/" + FileInformation.NOTES_FOLDER + "/" + folderName);
         if(!imageFolder.exists()) {
             imageFolder.mkdir();
             MediaScannerConnection.scanFile(context, new String[]{imageFolder.toString()}, null, null);
         }
+
+        File imageFolderNew = new File(Environment.getExternalStorageDirectory().getPath() + "/" +
+                FileInformation.ROOT_FOLDER + "/" + FileInformation.NOTES_FOLDER + "/" + folderName + "/" + FileInformation.PICTURES);
+        if(!imageFolderNew.exists()) {
+            imageFolderNew.mkdir();
+            MediaScannerConnection.scanFile(context, new String[]{imageFolderNew.toString()}, null, null);
+        }
+
         String imageFileName = "JPEG_" + numImg + "_";
-        String ImageFilePath = imageFolder + File.separator + imageFileName;
+        //String ImageFilePath = imageFolderNew + File.separator + imageFileName;
         File image = File.createTempFile(
                 imageFileName,  /* prefix */
                 ".jpg",         /* suffix */
-                imageFolder      /* directory */
+                imageFolderNew      /* directory */
         );
         return image;
+    }
+
+    public File createVideoFileFolder(Context context, String folderName, int numVid) {
+        File videoFolder = new File(Environment.getExternalStorageDirectory().getPath() + "/" +
+                FileInformation.ROOT_FOLDER + "/" + FileInformation.NOTES_FOLDER + "/" + folderName);
+
+        if (!videoFolder.exists()) {
+            videoFolder.mkdir();
+            MediaScannerConnection.scanFile(context, new String[]{videoFolder.toString()}, null, null);
+        }
+
+        File videoFolderNew = new File(Environment.getExternalStorageDirectory().getPath() + "/" +
+                FileInformation.ROOT_FOLDER + "/" + FileInformation.NOTES_FOLDER + "/" + folderName + "/" + FileInformation.VIDEOS);
+
+        if (!videoFolderNew.exists()) {
+            videoFolderNew.mkdir();
+            MediaScannerConnection.scanFile(context, new String[]{videoFolderNew.toString()}, null, null);
+        }
+
+        String videoFileName = "MP4_" + numVid + "_";
+        String videoFilePath = videoFolderNew + File.separator + videoFileName;
+        return videoFolderNew;
+    }
+
+    public File createMicFileFolder(Context context, String folderName, int numMic){
+        File micFolder = new File(Environment.getExternalStorageDirectory().getPath() + "/" +
+                FileInformation.ROOT_FOLDER + "/" + FileInformation.NOTES_FOLDER + "/" + folderName);
+        if(!micFolder.exists()) {
+            micFolder.mkdir();
+            MediaScannerConnection.scanFile(context, new String[]{micFolder.toString()}, null, null);
+        }
+
+        File micFolderNew = new File(Environment.getExternalStorageDirectory().getPath() + "/" +
+                FileInformation.ROOT_FOLDER + "/" + FileInformation.NOTES_FOLDER + "/" + folderName + "/" + FileInformation.PICTURES);
+        if(!micFolderNew.exists()) {
+            micFolderNew.mkdir();
+            MediaScannerConnection.scanFile(context, new String[]{micFolderNew.toString()}, null, null);
+        }
+
+        String imageFileName = "JPEG_" + numMic + "_";
+        //String ImageFilePath = imageFolderNew + File.separator + imageFileName;
+        return micFolderNew;
     }
 
 }

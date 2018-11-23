@@ -1,6 +1,7 @@
 package com.example.andreacarubelli.urbanstoriessharing;
 
 import android.Manifest;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -18,6 +19,7 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -33,8 +35,8 @@ import static android.os.Environment.getExternalStoragePublicDirectory;
 
 public class PostActivity extends AppCompatActivity {
 
-    static final int REQUEST_IMAGE_CAPTURE = 123;
     public static final int REQUEST_TAKE_PHOTO = 1;
+    public static final int REQUEST_TAKE_VIDEO = 2;
     public static final int CAMERA_PERMISSION = 123;
     public static final int STORAGE_PERMISSION = 125;
 
@@ -45,7 +47,7 @@ public class PostActivity extends AppCompatActivity {
 
     String folderName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 
-    int numImg;
+    int numImg, numVid, numMic;
 
 
     @Override
@@ -61,6 +63,38 @@ public class PostActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 finish();
+            }
+        });
+
+        final Button buttonPhoto = findViewById(R.id.photoButton);
+        buttonPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                goToCamera();
+            }
+        });
+
+        final Button buttonVideo = findViewById(R.id.videoButton);
+        buttonVideo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                goToVideo();
+            }
+        });
+
+        final Button buttonMic = findViewById(R.id.micButton);
+        buttonMic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent (view.getContext(), MicrophoneActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        final Button buttonNote = findViewById(R.id.noteButton);
+        buttonNote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
             }
         });
 
@@ -108,7 +142,7 @@ public class PostActivity extends AppCompatActivity {
         }
     }
 
-    public void goToCamera(View v) {
+    public void goToCamera() {
         getCameraPermission();
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
@@ -119,6 +153,7 @@ public class PostActivity extends AppCompatActivity {
                 numImg++;
             } catch (IOException ex) {
                 // Error occurred while creating the File
+                Toast.makeText(getApplicationContext(),"Ho avuto un problema nella creazione dell'immagine!", Toast.LENGTH_SHORT).show();
             }
             // Continue only if the File was successfully created
             if (photoFile != null) {
@@ -127,26 +162,43 @@ public class PostActivity extends AppCompatActivity {
         }
     }
 
-    public void goToVideo(View v){
+    public void goToVideo(){
         getCameraPermission();
         Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
         if (takeVideoIntent.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(takeVideoIntent, REQUEST_VIDEO_CAPTURE);
+            File videoFile = null;
+            try {
+                isStoragePermissionGranted();
+                videoFile = createVideoFile(this, folderName, numVid);
+                numVid++;
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+                Toast.makeText(getApplicationContext(),"Ho avuto un problema nella creazione del video!", Toast.LENGTH_SHORT).show();
+            }
+            // Continue only if the File was successfully created
+            if (videoFile != null) {
+                startActivityForResult(takeVideoIntent, REQUEST_TAKE_VIDEO);
+            }
         }
     }
 
 
     private File createImageFile (Context context, String folderName, int numImg) throws IOException {
         SavingOfFile folderFileImage = new SavingOfFile();
-        folderFileImage.createFolder(context);
         File image = folderFileImage.createImageFileFolder(context, folderName, numImg);
         return image;
     }
 
-    public void goToMicrophone(View v){
-        Intent intent = new Intent (this, MicrophoneActivity.class);
-        startActivity(intent);
+    private File createVideoFile (Context context, String folderName, int numVid) throws IOException {
+        SavingOfFile folderFileVideo = new SavingOfFile();
+        File video = folderFileVideo.createVideoFileFolder(context, folderName, numVid);
+        return video;
+    }
 
+    private File createMicFile (Context context, String folderName, int numMic) throws IOException {
+        SavingOfFile folderFileMic = new SavingOfFile();
+        File reg = folderFileMic.createMicFileFolder(context, folderName, numMic);
+        return reg;
     }
 
 }

@@ -2,10 +2,10 @@
     <string name="app_name">Urban Stories Sharing</string>
     <string name="title_activity_maps">Urban Stories Sharing</string>
     <string name="stringButton">Crea Nota</string>
-    <string name="stringPhoto">Foto</string>
-    <string name="stringVideo">Video</string>
-    <string name="stringAudio">Nota vocale</string>
-    <string name="stringNote">Nota scritta</string>
+    <string name="stringPhoto">+ Foto</string>
+    <string name="stringVideo">+ Video</string>
+    <string name="stringAudio">+ Nota vocale</string>
+    <string name="stringNote">+ Nota scritta</string>
     <string name="stringRegistra">Tieni premuto per registrare</string>
     <string name="stringInvia">INVIA</string>
 </resources>

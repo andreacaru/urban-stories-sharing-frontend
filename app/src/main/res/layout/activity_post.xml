@@ -79,17 +79,13 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp" />
 
-            <com.robertlevonyan.views.customfloatingactionbutton.FloatingActionButton
-                android:id="@+id/custom_fab1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="15dp"
-                app:fabType="roundedSquare"
-                app:fabText="@string/stringPhoto"
-                app:fabTextAllCaps="true"
-                app:fabIcon="@drawable/plus"
-                app:fabColor="@color/colorButton"
-                android:onClick="goToCamera"/>
+        <android.support.design.button.MaterialButton
+            android:id="@+id/photoButton"
+            android:layout_width="131dp"
+            android:layout_height="68dp"
+            android:layout_margin="15dp"
+            android:text="@string/stringPhoto"
+            android:backgroundTint="@color/colorButton"></android.support.design.button.MaterialButton>
 
         </LinearLayout>
 
@@ -104,17 +100,13 @@
                 android:layout_width="43dp"
                 android:layout_height="43dp" />
 
-            <com.robertlevonyan.views.customfloatingactionbutton.FloatingActionButton
-                android:id="@+id/custom_fab2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="15dp"
-                app:fabType="roundedSquare"
-                app:fabText="@string/stringVideo"
-                app:fabTextAllCaps="true"
-                app:fabIcon="@drawable/plus"
-                app:fabColor="@color/colorButton"
-                android:onClick="goToVideo"/>
+        <android.support.design.button.MaterialButton
+            android:id="@+id/videoButton"
+            android:layout_width="131dp"
+            android:layout_height="68dp"
+            android:layout_margin="15dp"
+            android:text="@string/stringVideo"
+            android:backgroundTint="@color/colorButton"></android.support.design.button.MaterialButton>
 
         </LinearLayout>
 
@@ -129,17 +121,13 @@
             android:layout_margin="22dp"
             android:src="@drawable/ic_mic_black_24dp" />
 
-        <com.robertlevonyan.views.customfloatingactionbutton.FloatingActionButton
-            android:id="@+id/custom_fab3"
+        <android.support.design.button.MaterialButton
+            android:id="@+id/micButton"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="68dp"
             android:layout_margin="15dp"
-            app:fabColor="@color/colorButton"
-            app:fabIcon="@drawable/plus"
-            app:fabText="@string/stringAudio"
-            app:fabTextAllCaps="true"
-            app:fabType="roundedSquare"
-            android:onClick="goToMicrophone"/>
+            android:text="@string/stringAudio"
+            android:backgroundTint="@color/colorButton"></android.support.design.button.MaterialButton>
 
     </LinearLayout>
 
@@ -154,16 +142,13 @@
                 android:layout_width="43dp"
                 android:layout_height="43dp" />
 
-            <com.robertlevonyan.views.customfloatingactionbutton.FloatingActionButton
-                android:id="@+id/custom_fab4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="15dp"
-                app:fabType="roundedSquare"
-                app:fabText="@string/stringNote"
-                app:fabTextAllCaps="true"
-                app:fabIcon="@drawable/plus"
-                app:fabColor="@color/colorButton" />
+        <android.support.design.button.MaterialButton
+            android:id="@+id/noteButton"
+            android:layout_width="wrap_content"
+            android:layout_height="68dp"
+            android:layout_margin="15dp"
+            android:text="@string/stringNote"
+            android:backgroundTint="@color/colorButton"></android.support.design.button.MaterialButton>
 
     </LinearLayout>
 
