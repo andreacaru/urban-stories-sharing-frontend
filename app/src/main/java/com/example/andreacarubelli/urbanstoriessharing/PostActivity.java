@@ -47,7 +47,7 @@ public class PostActivity extends AppCompatActivity {
 
     String folderName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 
-    int numImg, numVid, numMic;
+    int numImg, numVid, numMic, numNote;
 
 
     @Override
@@ -87,6 +87,7 @@ public class PostActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent (view.getContext(), MicrophoneActivity.class);
+                intent.putExtra("nomeCartella", folderName);
                 startActivity(intent);
             }
         });
@@ -95,6 +96,9 @@ public class PostActivity extends AppCompatActivity {
         buttonNote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent intent  = new Intent(view.getContext(), NoteActivity.class);
+                intent.putExtra("nomeCartella", folderName);
+                startActivity(intent);
             }
         });
 
@@ -195,11 +199,6 @@ public class PostActivity extends AppCompatActivity {
         return video;
     }
 
-    private File createMicFile (Context context, String folderName, int numMic) throws IOException {
-        SavingOfFile folderFileMic = new SavingOfFile();
-        File reg = folderFileMic.createMicFileFolder(context, folderName, numMic);
-        return reg;
-    }
 
 }
 

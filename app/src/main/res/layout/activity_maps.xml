@@ -21,8 +21,8 @@
         android:layout_height="79dp"
         android:layout_gravity="center_horizontal|bottom"
         android:layout_marginBottom="15dp"
-        android:text="@string/stringButton"
-        android:backgroundTint="@color/colorButton"/>
+        android:backgroundTint="@color/colorButton"
+        android:text="@string/stringButton" />
 
 </FrameLayout>
 

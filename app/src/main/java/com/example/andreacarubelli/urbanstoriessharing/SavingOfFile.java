@@ -70,15 +70,36 @@ public class SavingOfFile implements FileInformation{
         }
 
         File micFolderNew = new File(Environment.getExternalStorageDirectory().getPath() + "/" +
-                FileInformation.ROOT_FOLDER + "/" + FileInformation.NOTES_FOLDER + "/" + folderName + "/" + FileInformation.PICTURES);
+                FileInformation.ROOT_FOLDER + "/" + FileInformation.NOTES_FOLDER + "/" + folderName + "/" + FileInformation.AUDIO);
         if(!micFolderNew.exists()) {
             micFolderNew.mkdir();
             MediaScannerConnection.scanFile(context, new String[]{micFolderNew.toString()}, null, null);
         }
 
-        String imageFileName = "JPEG_" + numMic + "_";
+        String micFileName = "Registrazione" + numMic + "_";
         //String ImageFilePath = imageFolderNew + File.separator + imageFileName;
         return micFolderNew;
+    }
+
+    public File createNoteFileFolder(Context context, String folderName, int numNote){
+        File noteFolder = new File(Environment.getExternalStorageDirectory().getPath() + "/" +
+                FileInformation.ROOT_FOLDER + "/" + FileInformation.NOTES_FOLDER + "/" + folderName);
+        if(!noteFolder.exists()) {
+            noteFolder.mkdir();
+            MediaScannerConnection.scanFile(context, new String[]{noteFolder.toString()}, null, null);
+        }
+
+        File noteFolderNew = new File(Environment.getExternalStorageDirectory().getPath() + "/" +
+                FileInformation.ROOT_FOLDER + "/" + FileInformation.NOTES_FOLDER + "/" + folderName + "/" + FileInformation.NOTES);
+        if(!noteFolderNew.exists()) {
+            noteFolderNew.mkdir();
+            MediaScannerConnection.scanFile(context, new String[]{noteFolderNew.toString()}, null, null);
+        }
+
+        String noteFileName = "Nota" + numNote + "_";
+        //String ImageFilePath = imageFolderNew + File.separator + imageFileName;
+
+        return noteFolderNew;
     }
 
 }

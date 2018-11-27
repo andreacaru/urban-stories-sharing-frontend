@@ -8,4 +8,10 @@
     <string name="stringNote">+ Nota scritta</string>
     <string name="stringRegistra">Tieni premuto per registrare</string>
     <string name="stringInvia">INVIA</string>
+    <string name="title_activity_note">NoteActivity</string>
+    <string name="stringInseriscinota">Inserisci la tua nota</string>
+    <string name="stringNomeDelLuogo">Nome del luogo</string>
+    <string name="stringIndirizzo">Indirizzo</string>
+    <string name="stringAvviaRegistrazione">AVVIA</string>
+    <string name="stringStopRegistrazione">FERMA</string>
 </resources>

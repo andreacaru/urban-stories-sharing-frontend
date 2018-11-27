@@ -1,6 +1,8 @@
 package com.example.andreacarubelli.urbanstoriessharing;
 
 import android.Manifest;
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.media.Image;
@@ -20,24 +22,25 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
+import java.io.File;
 import java.io.IOException;
 
 public class MicrophoneActivity extends AppCompatActivity {
 
     public static final int RECORD_PERMISSION = 124;
     private boolean mRecordPermissionGranted = false;
-    private String[] permissions = {Manifest.permission.RECORD_AUDIO};
-    private MediaRecorder mRecorder = null;
-    private static final String LOG_TAG = "AudioRecordTest";
-    int i;
-    private static String mFileName = "Registrazione vocale" ;
-    ImageButton btnMic;
+    int numMic;
+    private static final String LOG_TAG = "MicTest";
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_microphone);
+
+        Intent intent = getIntent();
+        final String folderName = intent.getExtras().getString("nomeCartella");
+
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar_activity_mic);
         setSupportActionBar(myToolbar);
@@ -51,40 +54,28 @@ public class MicrophoneActivity extends AppCompatActivity {
             }
         });
 
-        ImageButton myButton = (ImageButton) findViewById(R.id.micImageButton);
-        myButton.setOnTouchListener(new View.OnTouchListener() {
+        Button btnAvviaRegistrazione = (Button) findViewById(R.id.btnAvvioRegistrazione);
+        btnAvviaRegistrazione.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-
-                switch (event.getAction() & MotionEvent.ACTION_MASK) {
-
-                    case MotionEvent.ACTION_DOWN:
-                        v.setPressed(true);
-                        mRecorder = new MediaRecorder();
-                        mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-                        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-                        mRecorder.setOutputFile(mFileName + i);
-                        i++;
-                        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-
-                        try {
-                            mRecorder.prepare();
-                        } catch (IOException e) {
-                            Log.e(LOG_TAG, "prepare() failed");
-                        }
-
-                        mRecorder.start();
-                        break;
-
-                    case MotionEvent.ACTION_UP:
-                        mRecorder.stop();
-                        mRecorder.release();
-                        mRecorder = null;
+            public void onClick(View view) {
+                File micFile = null;
+                try{
+                    micFile = createMicFile(view.getContext(), folderName, numMic);
+                    numMic++;
+                }catch (IOException e){
+                    Log.e(LOG_TAG, "prepare() failed");
                 }
-                return true;
+
             }
         });
 
+    }
+
+    private File createMicFile (Context context, String folderName, int numMic) throws IOException {
+        SavingOfFile folderFileMic = new SavingOfFile();
+        File reg = folderFileMic.createMicFileFolder(context, folderName, numMic);
+        return reg;
+        //implementare creazione file audio in SavingOfFile
     }
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {

@@ -50,7 +50,7 @@
             android:id="@+id/nameEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Nome del luogo"
+            android:hint="@string/stringNomeDelLuogo"
             android:layout_margin="16dp" />
     </android.support.design.widget.TextInputLayout>
 
@@ -63,7 +63,7 @@
             android:id="@+id/addressEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Indirizzo"
+            android:hint="@string/stringIndirizzo"
             android:layout_margin="16dp"/>
 
     </android.support.design.widget.TextInputLayout>
