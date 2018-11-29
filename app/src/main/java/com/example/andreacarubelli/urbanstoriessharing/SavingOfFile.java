@@ -5,12 +5,22 @@ import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.widget.Toast;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import static android.content.Context.MODE_PRIVATE;
+import static java.io.File.createTempFile;
 
 public class SavingOfFile implements FileInformation{
 
@@ -30,8 +40,7 @@ public class SavingOfFile implements FileInformation{
         }
 
         String imageFileName = "JPEG_" + numImg + "_";
-        //String ImageFilePath = imageFolderNew + File.separator + imageFileName;
-        File image = File.createTempFile(
+        File image = createTempFile(
                 imageFileName,  /* prefix */
                 ".jpg",         /* suffix */
                 imageFolderNew      /* directory */
@@ -39,7 +48,7 @@ public class SavingOfFile implements FileInformation{
         return image;
     }
 
-    public File createVideoFileFolder(Context context, String folderName, int numVid) {
+    public File createVideoFileFolder(Context context, String folderName, int numVid) throws IOException {
         File videoFolder = new File(Environment.getExternalStorageDirectory().getPath() + "/" +
                 FileInformation.ROOT_FOLDER + "/" + FileInformation.NOTES_FOLDER + "/" + folderName);
 
@@ -56,12 +65,16 @@ public class SavingOfFile implements FileInformation{
             MediaScannerConnection.scanFile(context, new String[]{videoFolderNew.toString()}, null, null);
         }
 
-        String videoFileName = "MP4_" + numVid + "_";
-        String videoFilePath = videoFolderNew + File.separator + videoFileName;
-        return videoFolderNew;
+        String videoFileName = "MP4_Video_numero" + numVid + "_";
+        File video = createTempFile(
+                videoFileName,
+                ".mp4",
+                videoFolderNew
+        );
+        return video;
     }
 
-    public File createMicFileFolder(Context context, String folderName, int numMic){
+    public File createMicFileFolder(Context context, String folderName, int numMic) throws  IOException{
         File micFolder = new File(Environment.getExternalStorageDirectory().getPath() + "/" +
                 FileInformation.ROOT_FOLDER + "/" + FileInformation.NOTES_FOLDER + "/" + folderName);
         if(!micFolder.exists()) {
@@ -81,7 +94,7 @@ public class SavingOfFile implements FileInformation{
         return micFolderNew;
     }
 
-    public File createNoteFileFolder(Context context, String folderName, int numNote){
+    public void createNoteFileFolder(Context context, String folderName, int numNote, String text) throws IOException{
         File noteFolder = new File(Environment.getExternalStorageDirectory().getPath() + "/" +
                 FileInformation.ROOT_FOLDER + "/" + FileInformation.NOTES_FOLDER + "/" + folderName);
         if(!noteFolder.exists()) {
@@ -96,10 +109,21 @@ public class SavingOfFile implements FileInformation{
             MediaScannerConnection.scanFile(context, new String[]{noteFolderNew.toString()}, null, null);
         }
 
-        String noteFileName = "Nota" + numNote + "_";
-        //String ImageFilePath = imageFolderNew + File.separator + imageFileName;
+        String noteFileName = "Nota_num_" + numNote + "_";
+        try {
+            File noteFile = createTempFile(
+                    noteFileName,
+                    ".txt",
+                    noteFolderNew);
+            FileWriter writer = new FileWriter(noteFile);
+            writer.append(text);
+            writer.flush();
+            writer.close();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
 
-        return noteFolderNew;
     }
 
 }

@@ -21,6 +21,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <provider
+            android:name=".GenericFileProvider"
+            android:authorities="com.example.android.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths"/>
+        </provider>
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
@@ -54,7 +65,7 @@
                 android:value=".PostActivity" />
         </activity>
         <activity
-            android:name=".NoteActivity"
+            android:name=".NotaScrittaActivity"
             android:label="@string/title_activity_note"></activity>
     </application>
 

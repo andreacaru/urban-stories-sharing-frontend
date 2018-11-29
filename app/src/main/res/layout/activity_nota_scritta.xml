@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    tools:context=".NoteActivity">
+    tools:context=".NotaScrittaActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/my_toolbar_activity_mic"
@@ -55,7 +55,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="15dp"
             android:backgroundTint="@color/colorButton"
-            android:text="@string/stringInvia"></android.support.design.button.MaterialButton>
+            android:text="@string/stringSalvaNota"></android.support.design.button.MaterialButton>
 
     </RelativeLayout>
 

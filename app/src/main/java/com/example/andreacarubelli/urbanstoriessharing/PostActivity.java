@@ -10,6 +10,7 @@ import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -42,8 +43,6 @@ public class PostActivity extends AppCompatActivity {
 
     private boolean mCameraPermissionGranted, mStoragePermissionGranted;
     ImageView mImageView;
-
-    static final int REQUEST_VIDEO_CAPTURE = 1;
 
     String folderName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 
@@ -96,9 +95,11 @@ public class PostActivity extends AppCompatActivity {
         buttonNote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent  = new Intent(view.getContext(), NoteActivity.class);
+                Intent intent  = new Intent(view.getContext(), NotaScrittaActivity.class);
                 intent.putExtra("nomeCartella", folderName);
+                intent.putExtra("numNota", numNote);
                 startActivity(intent);
+                numNote++;
             }
         });
 
@@ -161,6 +162,8 @@ public class PostActivity extends AppCompatActivity {
             }
             // Continue only if the File was successfully created
             if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(this, "com.example.android.fileprovider", photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
             }
         }
@@ -181,6 +184,8 @@ public class PostActivity extends AppCompatActivity {
             }
             // Continue only if the File was successfully created
             if (videoFile != null) {
+                Uri videoURI = FileProvider.getUriForFile(this, "com.example.android.fileprovider", videoFile);
+                takeVideoIntent.putExtra(MediaStore.EXTRA_OUTPUT, videoURI);
                 startActivityForResult(takeVideoIntent, REQUEST_TAKE_VIDEO);
             }
         }
@@ -197,6 +202,10 @@ public class PostActivity extends AppCompatActivity {
         SavingOfFile folderFileVideo = new SavingOfFile();
         File video = folderFileVideo.createVideoFileFolder(context, folderName, numVid);
         return video;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     }
 
 
