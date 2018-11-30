@@ -1,6 +1,7 @@
 package com.example.andreacarubelli.urbanstoriessharing;
 
 import android.content.Context;
+import android.media.MediaRecorder;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Environment;
@@ -8,6 +9,7 @@ import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.Toast;
 
 import java.io.File;
@@ -23,6 +25,8 @@ import static android.content.Context.MODE_PRIVATE;
 import static java.io.File.createTempFile;
 
 public class SavingOfFile implements FileInformation{
+
+    private MediaRecorder mRecorder;
 
     public File createImageFileFolder(Context context, String folderName, int numImg) throws IOException {
         File imageFolder = new File(Environment.getExternalStorageDirectory().getPath() + "/" +
@@ -74,7 +78,7 @@ public class SavingOfFile implements FileInformation{
         return video;
     }
 
-    public File createMicFileFolder(Context context, String folderName, int numMic) throws  IOException{
+    public MediaRecorder createMicFileFolder(Context context, String folderName, int numMic) throws  IOException{
         File micFolder = new File(Environment.getExternalStorageDirectory().getPath() + "/" +
                 FileInformation.ROOT_FOLDER + "/" + FileInformation.NOTES_FOLDER + "/" + folderName);
         if(!micFolder.exists()) {
@@ -89,9 +93,22 @@ public class SavingOfFile implements FileInformation{
             MediaScannerConnection.scanFile(context, new String[]{micFolderNew.toString()}, null, null);
         }
 
-        String micFileName = "Registrazione" + numMic + "_";
-        //String ImageFilePath = imageFolderNew + File.separator + imageFileName;
-        return micFolderNew;
+        String micFileName = micFolderNew.toString() + "/Registrazione_num_" + numMic + ".3gp";
+
+        MediaRecorder mRecorder = new MediaRecorder();
+        mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+        mRecorder.setOutputFile(micFileName);
+        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+
+        try {
+            mRecorder.prepare();
+        } catch (IOException e) {
+        }
+
+        mRecorder.start();
+
+        return mRecorder;
     }
 
     public void createNoteFileFolder(Context context, String folderName, int numNote, String text) throws IOException{

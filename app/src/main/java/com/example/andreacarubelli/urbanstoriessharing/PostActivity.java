@@ -87,7 +87,9 @@ public class PostActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent (view.getContext(), MicrophoneActivity.class);
                 intent.putExtra("nomeCartella", folderName);
+                intent.putExtra("numMic", numMic);
                 startActivity(intent);
+                numMic++;
             }
         });
 
