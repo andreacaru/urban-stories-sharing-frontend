@@ -57,7 +57,7 @@ public class PostActivity extends AppCompatActivity {
 
     Geocoder geocoder;
     List<Address> addresses;
-    double latitude, longitude;
+    double lat=0, lng=0;
 
 
     @Override
@@ -67,17 +67,19 @@ public class PostActivity extends AppCompatActivity {
 
         EditText addressText = (EditText) findViewById(R.id.addressEditText);
 
-        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
-        Bundle bundle = getIntent().getExtras();
-        double lat = bundle.getDouble("latitude");
-        double lng = bundle.getDouble("longitude");
+            Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+            Bundle bundle = getIntent().getExtras();
+            if(getIntent().getExtras()!=null){
+                lat = bundle.getDouble("latitude");
+                lng = bundle.getDouble("longitude");
+            }
 
         try{
             List<Address> addresses = geocoder.getFromLocation(lat,lng, 1);
-            if (addresses!=null){
+            if (addresses!=null & lat!=0 & lng!=0){
                 Address fetchedAddress = addresses.get(0);
-                String Address = fetchedAddress.getAddressLine(0).toString();
-                addressText.setText(Address, TextView.BufferType.EDITABLE);
+                    String Address = fetchedAddress.getAddressLine(0).toString();
+                    addressText.setText(Address, TextView.BufferType.EDITABLE);
             }
             else {
                 Toast.makeText(getApplicationContext(), "Non sono riuscito a recuperare la posizione!", Toast.LENGTH_SHORT).show();
