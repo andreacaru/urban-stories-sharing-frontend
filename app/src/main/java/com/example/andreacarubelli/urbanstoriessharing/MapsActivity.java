@@ -2,6 +2,8 @@ package com.example.andreacarubelli.urbanstoriessharing;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -28,6 +30,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -88,6 +92,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent (view.getContext(), PostActivity.class);
+                intent.putExtra("latitude", mLastKnownLocation.getLatitude());
+                intent.putExtra("longitude", mLastKnownLocation.getLongitude());
                 startActivity(intent);
             }
         });

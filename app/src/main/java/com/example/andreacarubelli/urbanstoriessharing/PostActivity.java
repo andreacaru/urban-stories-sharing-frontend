@@ -6,6 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
@@ -23,7 +26,9 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -31,6 +36,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 import static android.os.Environment.getExternalStoragePublicDirectory;
 
@@ -48,11 +55,35 @@ public class PostActivity extends AppCompatActivity {
 
     int numImg, numVid, numMic, numNote;
 
+    Geocoder geocoder;
+    List<Address> addresses;
+    double latitude, longitude;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
+
+        EditText addressText = (EditText) findViewById(R.id.addressEditText);
+
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        Bundle bundle = getIntent().getExtras();
+        double lat = bundle.getDouble("latitude");
+        double lng = bundle.getDouble("longitude");
+
+        try{
+            List<Address> addresses = geocoder.getFromLocation(lat,lng, 1);
+            if (addresses!=null){
+                Address fetchedAddress = addresses.get(0);
+                String Address = fetchedAddress.getAddressLine(0).toString();
+                addressText.setText(Address, TextView.BufferType.EDITABLE);
+            }
+            else {
+                Toast.makeText(getApplicationContext(), "Non sono riuscito a recuperare la posizione!", Toast.LENGTH_SHORT).show();
+            }
+        }
+        catch (IOException e){}
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
