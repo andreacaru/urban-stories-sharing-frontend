@@ -8,6 +8,9 @@ import android.graphics.Color;
 import android.media.Image;
 import android.media.MediaRecorder;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -20,12 +23,17 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Chronometer;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MicrophoneActivity extends AppCompatActivity {
 
@@ -48,7 +56,6 @@ public class MicrophoneActivity extends AppCompatActivity {
         final String folderName = intent.getExtras().getString("nomeCartella");
         final int numMic = intent.getExtras().getInt("numMic");
 
-
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar_activity_mic);
         setSupportActionBar(myToolbar);
         getSupportActionBar().setTitle(null);
@@ -61,22 +68,29 @@ public class MicrophoneActivity extends AppCompatActivity {
             }
         });
 
+
         Button btnAvviaRegistrazione = (Button) findViewById(R.id.btnAvvioRegistrazione);
+        final ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
         btnAvviaRegistrazione.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 if(!registrazioneAvviata){
                     try{
                         registrazioneAvviata = true;
                         micFile = null;
                         micFile = createMicFile(view.getContext(), folderName, numMic);
-                        Toast.makeText(getApplicationContext(), "Registrazione audio cominciata!", Toast.LENGTH_SHORT).show();
+                        Snackbar.make(view, "Registrazione in corso...", Snackbar.LENGTH_LONG)
+                                .show();
+                        progressBar.setVisibility(View.VISIBLE);
                     }catch (IOException e){
                         Log.e(LOG_TAG, "prepare() failed");
                     }
                 }
-                else{ Toast.makeText(getApplicationContext(), "Stai già registrando! Schiaccia su FERMA", Toast.LENGTH_SHORT).show();
+                else{
+                    Snackbar.make(view, "Stai già registrando! Schiaccia su FERMA", Snackbar.LENGTH_SHORT)
+                            .show();
                 }
             }
         });
@@ -87,10 +101,12 @@ public class MicrophoneActivity extends AppCompatActivity {
             public void onClick(View view) {
                 registrazioneAvviata = false;
                 if (micFile == null) {
-                    Toast.makeText(getApplicationContext(), "Non hai ancora registrato nulla!", Toast.LENGTH_SHORT).show();
+                    Snackbar.make(view, "Non hai ancora registrato nulla!", Snackbar.LENGTH_SHORT)
+                            .show();
                 } else {
                     stopRecording(micFile);
-                    Toast.makeText(getApplicationContext(), "Registrazione audio terminata e salvata!", Toast.LENGTH_SHORT).show();
+                    progressBar.setVisibility(View.INVISIBLE);
+                    Snackbar.make(view, "Registrazione audio terminata e salvata!", Snackbar.LENGTH_SHORT);
                     finish();
                 }
             }
@@ -131,6 +147,7 @@ public class MicrophoneActivity extends AppCompatActivity {
         if (!mRecordPermissionGranted) finish();
 
     }
+
 
 }
 

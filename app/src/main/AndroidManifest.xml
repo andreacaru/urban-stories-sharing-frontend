@@ -65,7 +65,7 @@
                 android:value=".PostActivity" />
         </activity>
         <activity
-            android:name=".NotaScrittaActivity"
+            android:name=".TextNoteActivity"
             android:label="@string/title_activity_note"></activity>
     </application>
 

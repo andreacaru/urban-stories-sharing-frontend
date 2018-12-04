@@ -4,12 +4,14 @@ import android.content.Context;
 import android.media.MediaRecorder;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.CountDownTimer;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -20,11 +22,12 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Timer;
 
 import static android.content.Context.MODE_PRIVATE;
 import static java.io.File.createTempFile;
 
-public class SavingOfFile implements FileInformation{
+public class SavingOfFile implements FileInformation {
 
     private MediaRecorder mRecorder;
 

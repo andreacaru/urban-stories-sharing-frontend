@@ -1,29 +1,23 @@
 package com.example.andreacarubelli.urbanstoriessharing;
 
 import android.Manifest;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
-import android.location.Location;
-import android.media.Image;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Environment;
-import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -32,14 +26,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-
-import static android.os.Environment.getExternalStoragePublicDirectory;
 
 public class PostActivity extends AppCompatActivity {
 
@@ -48,7 +39,7 @@ public class PostActivity extends AppCompatActivity {
     public static final int CAMERA_PERMISSION = 123;
     public static final int STORAGE_PERMISSION = 125;
 
-    private boolean mCameraPermissionGranted, mStoragePermissionGranted;
+    private boolean mCameraPermissionGranted,mStoragePermissionGranted;
     ImageView mImageView;
 
     String folderName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -82,7 +73,8 @@ public class PostActivity extends AppCompatActivity {
                     addressText.setText(Address, TextView.BufferType.EDITABLE);
             }
             else {
-                Toast.makeText(getApplicationContext(), "Non sono riuscito a recuperare la posizione!", Toast.LENGTH_SHORT).show();
+                Snackbar.make(getWindow().getDecorView().getRootView(), "Non sono riuscito a recuperare la posizione!", Snackbar.LENGTH_SHORT)
+                        .show();
             }
         }
         catch (IOException e){}
@@ -97,6 +89,15 @@ public class PostActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        getStoragePermission();
+
+        File folder = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/" +
+                FileInformation.ROOT_FOLDER + "/" + FileInformation.NOTES_FOLDER);
+        if(!folder.exists()) {
+            folder.mkdirs();
+            MediaScannerConnection.scanFile(this, new String[]{folder.toString()}, null, null);
+        }
 
         final Button buttonPhoto = findViewById(R.id.photoButton);
         buttonPhoto.setOnClickListener(new View.OnClickListener() {
@@ -130,7 +131,7 @@ public class PostActivity extends AppCompatActivity {
         buttonNote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent  = new Intent(view.getContext(), NotaScrittaActivity.class);
+                Intent intent  = new Intent(view.getContext(), TextNoteActivity.class);
                 intent.putExtra("nomeCartella", folderName);
                 intent.putExtra("numNota", numNote);
                 startActivity(intent);
@@ -141,7 +142,8 @@ public class PostActivity extends AppCompatActivity {
     }
 
     private void getCameraPermission() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+        if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
+                Manifest.permission.CAMERA)
                 == PackageManager.PERMISSION_GRANTED) {
             mCameraPermissionGranted = true;
         } else {
@@ -151,32 +153,33 @@ public class PostActivity extends AppCompatActivity {
         }
     }
 
-    private void isStoragePermissionGranted() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    private void getStoragePermission() {
+        if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 == PackageManager.PERMISSION_GRANTED) {
             mStoragePermissionGranted = true;
         } else {
             ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE},
                     STORAGE_PERMISSION);
         }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        mCameraPermissionGranted = false;
         switch (requestCode) {
             case CAMERA_PERMISSION: {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    mCameraPermissionGranted = true;
+                    mCameraPermissionGranted=true;
                 }
             }
+
             case STORAGE_PERMISSION: {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    mStoragePermissionGranted = true;
+                    mStoragePermissionGranted=true;
                 }
             }
         }
@@ -188,12 +191,12 @@ public class PostActivity extends AppCompatActivity {
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             File photoFile = null;
             try {
-                isStoragePermissionGranted();
                 photoFile = createImageFile(this, folderName, numImg);
                 numImg++;
             } catch (IOException ex) {
                 // Error occurred while creating the File
-                Toast.makeText(getApplicationContext(),"Ho avuto un problema nella creazione dell'immagine!", Toast.LENGTH_SHORT).show();
+                Snackbar.make(getWindow().getDecorView().getRootView(), "Ho avuto un problema nella creazione dell'immagine!", Snackbar.LENGTH_SHORT)
+                        .show();
             }
             // Continue only if the File was successfully created
             if (photoFile != null) {
@@ -210,12 +213,12 @@ public class PostActivity extends AppCompatActivity {
         if (takeVideoIntent.resolveActivity(getPackageManager()) != null) {
             File videoFile = null;
             try {
-                isStoragePermissionGranted();
                 videoFile = createVideoFile(this, folderName, numVid);
                 numVid++;
             } catch (IOException ex) {
                 // Error occurred while creating the File
-                Toast.makeText(getApplicationContext(),"Ho avuto un problema nella creazione del video!", Toast.LENGTH_SHORT).show();
+                Snackbar.make(getWindow().getDecorView().getRootView(), "Ho avuto un problema nella creazione del video!", Snackbar.LENGTH_SHORT)
+                        .show();
             }
             // Continue only if the File was successfully created
             if (videoFile != null) {

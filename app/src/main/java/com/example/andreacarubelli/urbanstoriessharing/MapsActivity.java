@@ -1,11 +1,15 @@
 package com.example.andreacarubelli.urbanstoriessharing;
 
+import android.Manifest;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -30,6 +34,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -190,7 +196,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                                 mLastKnownLocation.getLongitude()), DEFAULT_ZOOM));
                             }
                             else {
-                                Toast.makeText(getApplicationContext(),"Sto caricando la posizione...", Toast.LENGTH_SHORT).show(); //modificare con snackbar
+                                Snackbar.make(getWindow().getDecorView().getRootView(), "Sto caricando la posizione", Snackbar.LENGTH_SHORT)
+                                        .show();
+                                //Toast.makeText(getApplicationContext(),"Sto caricando la posizione...", Toast.LENGTH_SHORT).show(); //modificare con snackbar
                             }
 
                         } else {
@@ -216,4 +224,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             super.onSaveInstanceState(outState);
         }
     }
+
+
 }
