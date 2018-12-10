@@ -114,7 +114,7 @@ public class SavingOfFile implements FileInformation {
         return mRecorder;
     }
 
-    public void createNoteFileFolder(Context context, String folderName, int numNote, String text) throws IOException{
+    public void createNoteFileFolder(Context context, String folderName, String text) throws IOException{
         File noteFolder = new File(Environment.getExternalStorageDirectory().getPath() + "/" +
                 FileInformation.ROOT_FOLDER + "/" + FileInformation.NOTES_FOLDER + "/" + folderName);
         if(!noteFolder.exists()) {
@@ -129,12 +129,9 @@ public class SavingOfFile implements FileInformation {
             MediaScannerConnection.scanFile(context, new String[]{noteFolderNew.toString()}, null, null);
         }
 
-        String noteFileName = "Nota_num_" + numNote + "_";
+        String noteFileName = "Nota" + ".txt";
         try {
-            File noteFile = createTempFile(
-                    noteFileName,
-                    ".txt",
-                    noteFolderNew);
+            File noteFile = new File(noteFolderNew, noteFileName);
             FileWriter writer = new FileWriter(noteFile);
             writer.append(text);
             writer.flush();

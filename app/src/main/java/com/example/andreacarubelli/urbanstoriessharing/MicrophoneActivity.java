@@ -44,7 +44,6 @@ public class MicrophoneActivity extends AppCompatActivity {
     MediaRecorder micFile = null;
     boolean registrazioneAvviata = false;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,9 +63,13 @@ public class MicrophoneActivity extends AppCompatActivity {
         backArrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (micFile!=null){
+                    stopRecording(micFile);
+                }
                 finish();
             }
         });
+
 
 
         Button btnAvviaRegistrazione = (Button) findViewById(R.id.btnAvvioRegistrazione);
@@ -106,12 +109,19 @@ public class MicrophoneActivity extends AppCompatActivity {
                 } else {
                     stopRecording(micFile);
                     progressBar.setVisibility(View.INVISIBLE);
-                    Snackbar.make(view, "Registrazione audio terminata e salvata!", Snackbar.LENGTH_SHORT);
                     finish();
                 }
             }
         });
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if(micFile!=null){
+            stopRecording(micFile);
+        }
     }
 
     private MediaRecorder createMicFile (Context context, String folderName, int numMic) throws IOException {

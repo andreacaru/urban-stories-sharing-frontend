@@ -37,14 +37,16 @@ public class PostActivity extends AppCompatActivity {
     public static final int REQUEST_TAKE_PHOTO = 1;
     public static final int REQUEST_TAKE_VIDEO = 2;
     public static final int CAMERA_PERMISSION = 123;
+    public static final int VIDEO_PERMISSION = 999;
     public static final int STORAGE_PERMISSION = 125;
 
-    private boolean mCameraPermissionGranted,mStoragePermissionGranted;
+
+    private boolean mCameraPermissionGranted,mStoragePermissionGranted, mVideoPermissionGranted;
     ImageView mImageView;
 
     String folderName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 
-    int numImg, numVid, numMic, numNote;
+    int numImg, numVid, numMic;
 
     Geocoder geocoder;
     List<Address> addresses;
@@ -55,6 +57,8 @@ public class PostActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
+
+        getStoragePermission();
 
         EditText addressText = (EditText) findViewById(R.id.addressEditText);
 
@@ -90,20 +94,19 @@ public class PostActivity extends AppCompatActivity {
             }
         });
 
-        getStoragePermission();
-
-        File folder = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/" +
-                FileInformation.ROOT_FOLDER + "/" + FileInformation.NOTES_FOLDER);
-        if(!folder.exists()) {
-            folder.mkdirs();
-            MediaScannerConnection.scanFile(this, new String[]{folder.toString()}, null, null);
-        }
-
         final Button buttonPhoto = findViewById(R.id.photoButton);
         buttonPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                goToCamera();
+                getCameraPermission();
+                if (mCameraPermissionGranted){
+                    goToCamera();
+                }
+                else{
+                    Snackbar.make(getWindow().getDecorView().getRootView(), "Devi accettare i permessi per proseguire!", Snackbar.LENGTH_SHORT)
+                            .show();
+                }
+
             }
         });
 
@@ -111,7 +114,14 @@ public class PostActivity extends AppCompatActivity {
         buttonVideo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                goToVideo();
+                getVideoPermission();
+                if (mVideoPermissionGranted){
+                    goToVideo();
+                }
+                else{
+                    Snackbar.make(getWindow().getDecorView().getRootView(), "Devi accettare i permessi per proseguire!", Snackbar.LENGTH_SHORT)
+                            .show();
+                }
             }
         });
 
@@ -133,9 +143,7 @@ public class PostActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent  = new Intent(view.getContext(), TextNoteActivity.class);
                 intent.putExtra("nomeCartella", folderName);
-                intent.putExtra("numNota", numNote);
                 startActivity(intent);
-                numNote++;
             }
         });
 
@@ -148,8 +156,20 @@ public class PostActivity extends AppCompatActivity {
             mCameraPermissionGranted = true;
         } else {
             ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.CAMERA},
+                    new String[]{android.Manifest.permission.CAMERA},
                     CAMERA_PERMISSION);
+        }
+    }
+
+    private void getVideoPermission() {
+        if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
+                Manifest.permission.CAMERA)
+                == PackageManager.PERMISSION_GRANTED) {
+            mVideoPermissionGranted = true;
+        } else {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{android.Manifest.permission.CAMERA},
+                    VIDEO_PERMISSION);
         }
     }
 
@@ -173,12 +193,30 @@ public class PostActivity extends AppCompatActivity {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     mCameraPermissionGranted=true;
+                    goToCamera();
+                }
+            }
+
+            case VIDEO_PERMISSION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    mVideoPermissionGranted=true;
+                    if (!mCameraPermissionGranted){
+                        goToVideo();
+                        }
                 }
             }
 
             case STORAGE_PERMISSION: {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    File folder = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/" +
+                            FileInformation.ROOT_FOLDER + "/" + FileInformation.NOTES_FOLDER);
+                    if(!folder.exists()) {
+                        folder.mkdirs();
+                        MediaScannerConnection.scanFile(this, new String[]{folder.toString()}, null, null);
+                    }
                     mStoragePermissionGranted=true;
                 }
             }
@@ -186,7 +224,6 @@ public class PostActivity extends AppCompatActivity {
     }
 
     public void goToCamera() {
-        getCameraPermission();
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             File photoFile = null;
@@ -208,7 +245,6 @@ public class PostActivity extends AppCompatActivity {
     }
 
     public void goToVideo(){
-        getCameraPermission();
         Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
         if (takeVideoIntent.resolveActivity(getPackageManager()) != null) {
             File videoFile = null;

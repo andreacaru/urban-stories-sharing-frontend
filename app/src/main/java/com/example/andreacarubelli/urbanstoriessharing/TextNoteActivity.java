@@ -4,6 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.app.Activity;
+import android.os.Environment;
+import android.os.Handler;
+import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -11,11 +15,17 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 public class TextNoteActivity extends Activity {
     private static final String LOG_TAG = "NoteTest";
-
 
 
     @Override
@@ -24,7 +34,6 @@ public class TextNoteActivity extends Activity {
         setContentView(R.layout.activity_text_note);
         Intent intent = getIntent();
         final String folderName = intent.getExtras().getString("nomeCartella");
-        final int numNote = intent.getExtras().getInt("numNota");
 
         ImageView backArrow =  (ImageView) findViewById(R.id.freccia_indietro);
         backArrow.setOnClickListener(new View.OnClickListener() {
@@ -37,28 +46,66 @@ public class TextNoteActivity extends Activity {
         final EditText textInput = (EditText) findViewById(R.id.noteEditText);
 
         Button sendButton = (Button) findViewById(R.id.SendButtonNote);
+
+        textInput.setText(readFile().toString());
+
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 try{
-                    String text = textInput.getText().toString();
-                    createNoteFile(view.getContext(), folderName, numNote, text);
-                    Toast.makeText(getApplicationContext(), "Nota testuale salvata!", Toast.LENGTH_SHORT).show();
-                } catch (IOException e){
+                        String text = textInput.getText().toString();
+                        createNoteFile(view.getContext(), folderName, text);
+                        Snackbar.make(view, "Nota testuale salvata", Snackbar.LENGTH_SHORT)
+                            .show();
+                        Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                        public void run() {
+                            finish();
+                        }
+                    }, 2000);
+                    } catch (IOException e){
                     Log.e(LOG_TAG, "prepare() failed");
                 }
-                finish();
-            }
-        });
+                }
 
+        });
     }
 
-    private void createNoteFile (Context context, String folderName, int numNote, String text) throws IOException{
+
+    private void createNoteFile (Context context, String folderName, String text) throws IOException{
         SavingOfFile folderFileNote = new SavingOfFile();
-        folderFileNote.createNoteFileFolder(context, folderName, numNote, text);
+        folderFileNote.createNoteFileFolder(context, folderName, text);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {}
+
+    private StringBuilder readFile (){
+        Intent intent = getIntent();
+        final String folderName = intent.getExtras().getString("nomeCartella");
+
+        final String path = Environment.getExternalStorageDirectory().getPath() + "/" +
+                FileInformation.ROOT_FOLDER + "/" + FileInformation.NOTES_FOLDER + "/" + folderName + "/" + FileInformation.NOTES;
+
+        String fileName= "Nota.txt";
+
+        StringBuilder text = new StringBuilder();
+        File file = new File(path, fileName);
+
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            String line;
+
+            while ((line = br.readLine()) != null) {
+                text.append(line);
+                text.append('\n');
+            }
+            br.close();
+        }
+        catch (IOException e) {
+            //You'll need to add proper error handling here
+        }
+        return text;
+    }
 
 }
