@@ -47,6 +47,7 @@ public class SavingOfFile implements FileInformation {
         }
 
         String imageFileName = "JPEG_" + numImg + "_";
+
         File image = createTempFile(
                 imageFileName,  /* prefix */
                 ".jpg",         /* suffix */

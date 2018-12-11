@@ -15,5 +15,5 @@
     <string name="stringAvviaRegistrazione">AVVIA</string>
     <string name="stringStopRegistrazione">FERMA</string>
     <string name="stringSalvaNota">SALVA</string>
-    <string name="stringModificaNota">MODIFICA</string>
+    <string name="stringModifica">Modifica</string>
 </resources>

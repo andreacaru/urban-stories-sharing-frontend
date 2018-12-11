@@ -17,6 +17,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
@@ -94,7 +95,8 @@ public class PostActivity extends AppCompatActivity {
             }
         });
 
-        final Button buttonPhoto = findViewById(R.id.photoButton);
+        final CardView buttonPhoto = findViewById(R.id.photoButton);
+
         buttonPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -110,7 +112,7 @@ public class PostActivity extends AppCompatActivity {
             }
         });
 
-        final Button buttonVideo = findViewById(R.id.videoButton);
+        final CardView buttonVideo = findViewById(R.id.videoButton);
         buttonVideo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -125,7 +127,7 @@ public class PostActivity extends AppCompatActivity {
             }
         });
 
-        final Button buttonMic = findViewById(R.id.micButton);
+        final CardView buttonMic = findViewById(R.id.micButton);
         buttonMic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -137,7 +139,7 @@ public class PostActivity extends AppCompatActivity {
             }
         });
 
-        final Button buttonNote = findViewById(R.id.noteButton);
+        final CardView buttonNote = findViewById(R.id.noteButton);
         buttonNote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -236,13 +238,16 @@ public class PostActivity extends AppCompatActivity {
                         .show();
             }
             // Continue only if the File was successfully created
-            if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(this, "com.example.android.fileprovider", photoFile);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+                if (photoFile != null) {
+                    Uri photoURI = FileProvider.getUriForFile(this, "com.example.android.fileprovider", photoFile);
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                    startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+                    if (photoFile.length()==0){
+                        photoFile.delete();
+                    }
+                }
             }
         }
-    }
 
     public void goToVideo(){
         Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
@@ -261,6 +266,9 @@ public class PostActivity extends AppCompatActivity {
                 Uri videoURI = FileProvider.getUriForFile(this, "com.example.android.fileprovider", videoFile);
                 takeVideoIntent.putExtra(MediaStore.EXTRA_OUTPUT, videoURI);
                 startActivityForResult(takeVideoIntent, REQUEST_TAKE_VIDEO);
+                if (videoFile.length()==0){
+                    videoFile.delete();
+                }
             }
         }
     }
@@ -280,6 +288,10 @@ public class PostActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case REQUEST_TAKE_PHOTO : {
+            }
+        }
     }
 
 

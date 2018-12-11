@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:tools="http://schemas.android.com/tools"
+    <LinearLayout xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -25,9 +25,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_arrow_back_black_24dp"
-                android:layout_alignParentLeft="true"
-                />
-
+                android:layout_alignParentLeft="true" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -36,120 +34,229 @@
                 android:textColor="@color/colorButtonToolbar"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="16dp" />
+                android:layout_alignParentLeft="true" />
+
         </RelativeLayout>
 
     </android.support.v7.widget.Toolbar>
 
     <android.support.design.widget.TextInputLayout
-        android:id="@+id/nameTextInputLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp">
+                    android:id="@+id/nameTextInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp">
 
-        <EditText
-            android:id="@+id/nameEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/stringNomeDelLuogo"
-            android:layout_margin="16dp" />
-    </android.support.design.widget.TextInputLayout>
+                    <EditText
+                        android:id="@+id/nameEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/stringNomeDelLuogo"
+                        android:layout_margin="16dp" />
+                </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
-        android:id="@+id/addressTextInputLayout"
+                    android:id="@+id/addressTextInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <EditText
+                        android:id="@+id/addressEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/stringIndirizzo"
+                        android:layout_margin="16dp"/>
+
+                </android.support.design.widget.TextInputLayout>
+
+    <GridLayout
+        android:id="@+id/mainGrid"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:layout_weight="8"
+        android:alignmentMode="alignMargins"
+        android:columnCount="2"
+        android:columnOrderPreserved="false"
+        android:padding="14dp"
+        android:rowCount="2">
 
-        <EditText
-            android:id="@+id/addressEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/stringIndirizzo"
-            android:layout_margin="16dp"/>
+        <!-- Row 1 -->
 
-    </android.support.design.widget.TextInputLayout>
-
-    <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:src="@drawable/ic_add_a_photo_black_24dp"
-                android:layout_margin="22dp"
-                android:layout_width="40dp"
-                android:layout_height="40dp" />
-
-        <android.support.design.button.MaterialButton
+        <!-- Column 1 -->
+        <android.support.v7.widget.CardView
             android:id="@+id/photoButton"
-            android:layout_width="131dp"
-            android:layout_height="68dp"
-            android:layout_margin="15dp"
-            android:text="@string/stringPhoto"
-            android:backgroundTint="@color/colorButton"></android.support.design.button.MaterialButton>
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnWeight="1"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_rowWeight="1"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="8dp">
 
-        </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:layout_margin="16dp"
+                android:orientation="vertical">
 
-    <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/ic_add_a_photo_black_24dp" />
 
-            <ImageView
-                android:src="@drawable/ic_videocam_black_24dp"
-                android:layout_margin="22dp"
-                android:layout_width="43dp"
-                android:layout_height="43dp" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/stringPhoto"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp" />
 
-        <android.support.design.button.MaterialButton
+                <android.support.design.button.MaterialButton
+                    android:id="@+id/btnModificaFoto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/stringModifica"
+                    android:backgroundTint="@color/colorButton">
+
+                </android.support.design.button.MaterialButton>
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
+        <!-- Column 2 -->
+        <android.support.v7.widget.CardView
             android:id="@+id/videoButton"
-            android:layout_width="131dp"
-            android:layout_height="68dp"
-            android:layout_margin="15dp"
-            android:text="@string/stringVideo"
-            android:backgroundTint="@color/colorButton"></android.support.design.button.MaterialButton>
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnWeight="1"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_rowWeight="1"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="8dp">
 
-        </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:layout_margin="16dp"
+                android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/ic_videocam_black_24dp" />
 
-        <ImageView
-            android:layout_width="43dp"
-            android:layout_height="43dp"
-            android:layout_margin="22dp"
-            android:src="@drawable/ic_mic_black_24dp" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/stringVideo"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp" />
 
-        <android.support.design.button.MaterialButton
+                <android.support.design.button.MaterialButton
+                    android:id="@+id/btnModificaVideo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/stringModifica"
+                    android:backgroundTint="@color/colorButton">
+
+                </android.support.design.button.MaterialButton>
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
+
+        <!-- Row 2 -->
+
+        <!-- Column 1 -->
+        <android.support.v7.widget.CardView
             android:id="@+id/micButton"
-            android:layout_width="wrap_content"
-            android:layout_height="68dp"
-            android:layout_margin="15dp"
-            android:text="@string/stringAudio"
-            android:backgroundTint="@color/colorButton"></android.support.design.button.MaterialButton>
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnWeight="1"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_rowWeight="1"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="8dp">
 
-    </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:layout_margin="16dp"
+                android:orientation="vertical">
 
-    <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/ic_mic_black_24dp" />
 
-            <ImageView
-                android:src="@drawable/ic_note_add_black_24dp"
-                android:layout_margin="22dp"
-                android:layout_width="43dp"
-                android:layout_height="43dp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/stringAudio"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp" />
 
-        <android.support.design.button.MaterialButton
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
+        <!-- Column 2 -->
+        <android.support.v7.widget.CardView
             android:id="@+id/noteButton"
-            android:layout_width="wrap_content"
-            android:layout_height="68dp"
-            android:layout_margin="15dp"
-            android:text="@string/stringNote"
-            android:backgroundTint="@color/colorButton"></android.support.design.button.MaterialButton>
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnWeight="1"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_rowWeight="1"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="8dp">
 
-    </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:layout_margin="16dp"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/ic_note_add_black_24dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/stringNote"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp" />
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
+    </GridLayout>
 
 </LinearLayout>
+
