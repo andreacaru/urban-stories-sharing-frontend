@@ -21,7 +21,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <provider
             android:name=".GenericFileProvider"
             android:authorities="com.example.android.fileprovider"
@@ -29,7 +28,7 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths"/>
+                android:resource="@xml/provider_paths" />
         </provider>
 
         <meta-data
@@ -51,7 +50,8 @@
         <activity
             android:name=".PostActivity"
             android:parentActivityName=".MapsActivity"
-            android:theme="@style/NoTitleBar">
+            android:theme="@style/NoTitleBar"
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MapsActivity" />
@@ -66,7 +66,16 @@
         </activity>
         <activity
             android:name=".TextNoteActivity"
-            android:label="@string/title_activity_note"></activity>
+            android:label="@string/title_activity_note" />
+        <activity
+            android:name=".ModifyPhoto"
+            android:label="@string/title_activity_modify_photo" />
+        <activity
+            android:name=".ModifyVideo"
+            android:label="@string/title_activity_modify_video" />
+        <activity
+            android:name=".ModifyVoiceNote"
+            android:label="@string/title_activity_modify_voice_note"></activity>
     </application>
 
 </manifest>

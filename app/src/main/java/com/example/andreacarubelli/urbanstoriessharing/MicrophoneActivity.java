@@ -1,7 +1,9 @@
 package com.example.andreacarubelli.urbanstoriessharing;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -13,10 +15,12 @@ import android.os.Handler;
 import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -32,6 +36,7 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.channels.InterruptedByTimeoutException;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -120,7 +125,10 @@ public class MicrophoneActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         if(micFile!=null){
+            Dialog alert = onCreateDialog(micFile);
+            alert.show();
             stopRecording(micFile);
+
         }
     }
 
@@ -134,6 +142,25 @@ public class MicrophoneActivity extends AppCompatActivity {
         mRecorder.stop();
         mRecorder.release();
         mRecorder = null;
+    }
+
+
+    public Dialog onCreateDialog(final MediaRecorder micFiles){
+        AlertDialog.Builder builder = new AlertDialog.Builder(MicrophoneActivity.this);
+        builder.setMessage(R.string.dialog_message)
+                .setPositiveButton(R.string.salva_vocale, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                        stopRecording(micFiles);
+                    }
+                })
+                .setNegativeButton(R.string.cancella_vocale, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                    }
+                });
+        // Create the AlertDialog object and return it
+        return builder.create();
     }
 
     private void isRecordPermissionGranted() {

@@ -96,7 +96,6 @@ public class PostActivity extends AppCompatActivity {
         });
 
         final CardView buttonPhoto = findViewById(R.id.photoButton);
-
         buttonPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -108,6 +107,7 @@ public class PostActivity extends AppCompatActivity {
                     Snackbar.make(getWindow().getDecorView().getRootView(), "Devi accettare i permessi per proseguire!", Snackbar.LENGTH_SHORT)
                             .show();
                 }
+                numImg++;
 
             }
         });
@@ -124,6 +124,7 @@ public class PostActivity extends AppCompatActivity {
                     Snackbar.make(getWindow().getDecorView().getRootView(), "Devi accettare i permessi per proseguire!", Snackbar.LENGTH_SHORT)
                             .show();
                 }
+                numVid++;
             }
         });
 
@@ -149,6 +150,61 @@ public class PostActivity extends AppCompatActivity {
             }
         });
 
+        final Button modifyPhoto = findViewById(R.id.btnModificaFoto);
+        final Button modifyVideo = findViewById(R.id.btnModificaVideo);
+        final Button modifyVocalNote = findViewById(R.id.btnModificaNotaVocale);
+
+        modifyPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), ModifyPhoto.class);
+                startActivity(intent);
+            }
+        });
+
+        modifyVideo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), ModifyPhoto.class);
+                startActivity(intent);
+            }
+        });
+
+        modifyVocalNote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), ModifyPhoto.class);
+                startActivity(intent);
+            }
+        });
+
+        final TextView textNumFoto = findViewById(R.id.textNumFoto);
+        final TextView textNumVideo = findViewById(R.id.textNumVideo);
+        final TextView textNumVocali = findViewById(R.id.textNumVocali);
+
+        final TextView numFoto = findViewById(R.id.numFoto);
+        final TextView numVideo = findViewById(R.id.numVideo);
+        final TextView numVocali = findViewById(R.id.numVocali);
+
+        if(numImg==0){
+            textNumFoto.setVisibility(View.INVISIBLE);
+            numFoto.setVisibility(View.INVISIBLE);
+        }
+        if(numVid==0){
+            textNumVideo.setVisibility(View.INVISIBLE);
+            numVideo.setVisibility(View.INVISIBLE);
+        }
+        if(numMic==0){
+            textNumVocali.setVisibility(View.INVISIBLE);
+            numVocali.setVisibility(View.INVISIBLE);
+        }
+
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        setNumFile(getNumImg(numImg), getNumVid(numVid), getNumMic(numMic));
     }
 
     private void getCameraPermission() {
@@ -231,7 +287,6 @@ public class PostActivity extends AppCompatActivity {
             File photoFile = null;
             try {
                 photoFile = createImageFile(this, folderName, numImg);
-                numImg++;
             } catch (IOException ex) {
                 // Error occurred while creating the File
                 Snackbar.make(getWindow().getDecorView().getRootView(), "Ho avuto un problema nella creazione dell'immagine!", Snackbar.LENGTH_SHORT)
@@ -255,7 +310,6 @@ public class PostActivity extends AppCompatActivity {
             File videoFile = null;
             try {
                 videoFile = createVideoFile(this, folderName, numVid);
-                numVid++;
             } catch (IOException ex) {
                 // Error occurred while creating the File
                 Snackbar.make(getWindow().getDecorView().getRootView(), "Ho avuto un problema nella creazione del video!", Snackbar.LENGTH_SHORT)
@@ -273,7 +327,6 @@ public class PostActivity extends AppCompatActivity {
         }
     }
 
-
     private File createImageFile (Context context, String folderName, int numImg) throws IOException {
         SavingOfFile folderFileImage = new SavingOfFile();
         File image = folderFileImage.createImageFileFolder(context, folderName, numImg);
@@ -286,6 +339,63 @@ public class PostActivity extends AppCompatActivity {
         return video;
     }
 
+    private void setNumFile(int numImmagine, int numVideos, int numNotaVocale){
+
+        final TextView textNumFoto = findViewById(R.id.textNumFoto);
+        final TextView textNumVideo = findViewById(R.id.textNumVideo);
+        final TextView textNumVocali = findViewById(R.id.textNumVocali);
+
+        final TextView numFoto = findViewById(R.id.numFoto);
+        final TextView numVideo = findViewById(R.id.numVideo);
+        final TextView numVocali = findViewById(R.id.numVocali);
+
+
+
+        numFoto.setText(" "+ numImmagine);
+        numVideo.setText(" " + numVideos);
+        numVocali.setText(" " + numNotaVocale);
+
+
+        if (numImmagine == 0){
+            numFoto.setVisibility(View.INVISIBLE);
+            textNumFoto.setVisibility(View.INVISIBLE);
+        } else {
+            numFoto.setVisibility(View.VISIBLE);
+            textNumFoto.setVisibility(View.VISIBLE);
+            numFoto.setText(" "+ numImmagine);
+        }
+
+        if(numVideos == 0){
+            numVideo.setVisibility(View.INVISIBLE);
+            textNumVideo.setVisibility(View.INVISIBLE);
+        } else {
+            textNumVideo.setVisibility(View.VISIBLE);
+            numVideo.setVisibility(View.VISIBLE);
+            numVideo.setText(" " + numVideos);
+        }
+
+        if(numNotaVocale == 0){
+            numVocali.setVisibility(View.INVISIBLE);
+            textNumVocali.setVisibility(View.INVISIBLE);
+        } else {
+            textNumVocali.setVisibility(View.VISIBLE);
+            numVocali.setVisibility(View.VISIBLE);
+            numVocali.setText(" " + numNotaVocale);
+        }
+
+
+    }
+
+    private int getNumImg(int numImg){
+        return numImg;
+    }
+    private int getNumVid(int numVid){
+        return numVid;
+    }
+    private int getNumMic(int numMic){
+        return numMic;
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
@@ -293,7 +403,4 @@ public class PostActivity extends AppCompatActivity {
             }
         }
     }
-
-
 }
-

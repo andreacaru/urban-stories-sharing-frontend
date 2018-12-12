@@ -3,7 +3,9 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="colorButton">#661FFF</color>
+    <color name="colorButton">#0336FF</color>
     <color name="colorIconPost">#293133</color>
     <color name="colorButtonToolbar">#FFFF</color>
+    <color name="colorModifyButton">#0336FF</color>
+    <color name="colorTransparent">#80000000</color>
 </resources>

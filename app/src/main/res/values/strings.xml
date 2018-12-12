@@ -4,7 +4,7 @@
     <string name="stringButton">Crea Nota</string>
     <string name="stringPhoto">+ Foto</string>
     <string name="stringVideo">+ Video</string>
-    <string name="stringAudio">+ Nota vocale</string>
+    <string name="stringAudio">+ Vocale</string>
     <string name="stringNote">+ Nota scritta</string>
     <string name="stringRegistra">Tieni premuto per registrare</string>
     <string name="stringInvia">INVIA</string>
@@ -16,4 +16,13 @@
     <string name="stringStopRegistrazione">FERMA</string>
     <string name="stringSalvaNota">SALVA</string>
     <string name="stringModifica">Modifica</string>
+    <string name="title_activity_modify_photo">ModifyPhoto</string>
+    <string name="title_activity_modify_video">ModifyVideo</string>
+    <string name="title_activity_modify_voice_note">ModifyVoiceNote</string>
+    <string name="stringNumFoto">Num foto: </string>
+    <string name="stringNumVideo">Num video: </string>
+    <string name="stringNumVocali">Num vocali: </string>
+    <string name="dialog_message">Vuoi continuare lo stesso?</string>
+    <string name="salva_vocale">Salva</string>
+    <string name="cancella_vocale">Cancella</string>
 </resources>
