@@ -11,6 +11,7 @@ import android.media.Image;
 import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.provider.MediaStore;
@@ -56,26 +57,13 @@ public class MicrophoneActivity extends AppCompatActivity {
 
         isRecordPermissionGranted();
 
-        Intent intent = getIntent();
+        final Intent intent = getIntent();
         final String folderName = intent.getExtras().getString("nomeCartella");
         final int numMic = intent.getExtras().getInt("numMic");
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar_activity_mic);
         setSupportActionBar(myToolbar);
         getSupportActionBar().setTitle(null);
-
-        ImageView backArrow = (ImageView) findViewById(R.id.freccia_indietro);
-        backArrow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (micFile!=null){
-                    stopRecording(micFile);
-                }
-                finish();
-            }
-        });
-
-
 
         Button btnAvviaRegistrazione = (Button) findViewById(R.id.btnAvvioRegistrazione);
         final ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
@@ -114,6 +102,21 @@ public class MicrophoneActivity extends AppCompatActivity {
                 } else {
                     stopRecording(micFile);
                     progressBar.setVisibility(View.INVISIBLE);
+                    setResult(RESULT_OK, intent);
+                    finish();
+                }
+            }
+        });
+
+        ImageView backArrow = (ImageView) findViewById(R.id.freccia_indietro);
+        backArrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (micFile!=null){
+                    Dialog alert = onCreateDialog(micFile);
+                    alert.show();
+                }
+                else{
                     finish();
                 }
             }
@@ -123,12 +126,12 @@ public class MicrophoneActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
         if(micFile!=null){
             Dialog alert = onCreateDialog(micFile);
             alert.show();
-            stopRecording(micFile);
-
+        }
+        else{
+            finish();
         }
     }
 
@@ -150,17 +153,37 @@ public class MicrophoneActivity extends AppCompatActivity {
         builder.setMessage(R.string.dialog_message)
                 .setPositiveButton(R.string.salva_vocale, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        dialog.dismiss();
+                        Intent intent = getIntent();
+                        setResult(RESULT_OK, intent);
                         stopRecording(micFiles);
+                        MicrophoneActivity.this.finish();
                     }
                 })
                 .setNegativeButton(R.string.cancella_vocale, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-
+                        stopRecording(micFiles);
+                        removeFileAudio();
+                        MicrophoneActivity.this.finish();
                     }
                 });
         // Create the AlertDialog object and return it
         return builder.create();
+    }
+
+    private void removeFileAudio(){
+        Intent intent = getIntent();
+        final String folderName = intent.getExtras().getString("nomeCartella");
+        final int numMic = intent.getExtras().getInt("numMic");
+
+        File path = new File (Environment.getExternalStorageDirectory().getPath() + "/" +
+                FileInformation.ROOT_FOLDER + "/" + FileInformation.NOTES_FOLDER + "/" + folderName + "/" + FileInformation.AUDIO);
+        String micFileName = path.toString() + "/Registrazione_num_" + numMic + ".3gp";
+
+        File fileAudio = new File(path, micFileName);
+        if (fileAudio.exists()) fileAudio.delete();
+        else  Snackbar.make(getWindow().getDecorView().getRootView(), "Non trovo il file", Snackbar.LENGTH_SHORT)
+                .show();
+
     }
 
     private void isRecordPermissionGranted() {

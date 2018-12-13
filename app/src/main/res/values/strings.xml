@@ -24,5 +24,5 @@
     <string name="stringNumVocali">Num vocali: </string>
     <string name="dialog_message">Vuoi continuare lo stesso?</string>
     <string name="salva_vocale">Salva</string>
-    <string name="cancella_vocale">Cancella</string>
+    <string name="cancella_vocale">Non salvare</string>
 </resources>

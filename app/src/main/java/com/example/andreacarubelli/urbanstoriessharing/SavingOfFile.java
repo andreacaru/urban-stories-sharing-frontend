@@ -46,13 +46,8 @@ public class SavingOfFile implements FileInformation {
             MediaScannerConnection.scanFile(context, new String[]{imageFolderNew.toString()}, null, null);
         }
 
-        String imageFileName = "JPEG_" + numImg + "_";
-
-        File image = createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                imageFolderNew      /* directory */
-        );
+        String imageFileName = "JPEG_" + numImg + "_" + ".jpg";
+        File image = new File (imageFolderNew, imageFileName);
         return image;
     }
 
@@ -73,12 +68,9 @@ public class SavingOfFile implements FileInformation {
             MediaScannerConnection.scanFile(context, new String[]{videoFolderNew.toString()}, null, null);
         }
 
-        String videoFileName = "MP4_Video_numero" + numVid + "_";
-        File video = createTempFile(
-                videoFileName,
-                ".mp4",
-                videoFolderNew
-        );
+        String videoFileName = "Video_num_" + numVid + "_"+ ".mp4";
+        File video = new File(videoFolderNew, videoFileName);
+
         return video;
     }
 

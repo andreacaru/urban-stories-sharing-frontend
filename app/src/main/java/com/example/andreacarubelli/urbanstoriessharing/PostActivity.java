@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
 import android.media.MediaScannerConnection;
@@ -37,6 +38,7 @@ public class PostActivity extends AppCompatActivity {
 
     public static final int REQUEST_TAKE_PHOTO = 1;
     public static final int REQUEST_TAKE_VIDEO = 2;
+    public static final int REQUEST_TAKE_AUDIO = 3;
     public static final int CAMERA_PERMISSION = 123;
     public static final int VIDEO_PERMISSION = 999;
     public static final int STORAGE_PERMISSION = 125;
@@ -107,8 +109,6 @@ public class PostActivity extends AppCompatActivity {
                     Snackbar.make(getWindow().getDecorView().getRootView(), "Devi accettare i permessi per proseguire!", Snackbar.LENGTH_SHORT)
                             .show();
                 }
-                numImg++;
-
             }
         });
 
@@ -120,11 +120,10 @@ public class PostActivity extends AppCompatActivity {
                 if (mVideoPermissionGranted){
                     goToVideo();
                 }
-                else{
+                else {
                     Snackbar.make(getWindow().getDecorView().getRootView(), "Devi accettare i permessi per proseguire!", Snackbar.LENGTH_SHORT)
                             .show();
                 }
-                numVid++;
             }
         });
 
@@ -135,8 +134,7 @@ public class PostActivity extends AppCompatActivity {
                 Intent intent = new Intent (view.getContext(), MicrophoneActivity.class);
                 intent.putExtra("nomeCartella", folderName);
                 intent.putExtra("numMic", numMic);
-                startActivity(intent);
-                numMic++;
+                startActivityForResult(intent, REQUEST_TAKE_AUDIO);
             }
         });
 
@@ -286,7 +284,7 @@ public class PostActivity extends AppCompatActivity {
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             File photoFile = null;
             try {
-                photoFile = createImageFile(this, folderName, numImg);
+                photoFile = createImageFile(this, folderName, getNumImg(numImg));
             } catch (IOException ex) {
                 // Error occurred while creating the File
                 Snackbar.make(getWindow().getDecorView().getRootView(), "Ho avuto un problema nella creazione dell'immagine!", Snackbar.LENGTH_SHORT)
@@ -297,9 +295,7 @@ public class PostActivity extends AppCompatActivity {
                     Uri photoURI = FileProvider.getUriForFile(this, "com.example.android.fileprovider", photoFile);
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                     startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
-                    if (photoFile.length()==0){
-                        photoFile.delete();
-                    }
+                    setResult(RESULT_OK, takePictureIntent);
                 }
             }
         }
@@ -320,9 +316,7 @@ public class PostActivity extends AppCompatActivity {
                 Uri videoURI = FileProvider.getUriForFile(this, "com.example.android.fileprovider", videoFile);
                 takeVideoIntent.putExtra(MediaStore.EXTRA_OUTPUT, videoURI);
                 startActivityForResult(takeVideoIntent, REQUEST_TAKE_VIDEO);
-                if (videoFile.length()==0){
-                    videoFile.delete();
-                }
+                setResult(RESULT_OK, takeVideoIntent);
             }
         }
     }
@@ -398,8 +392,17 @@ public class PostActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case REQUEST_TAKE_PHOTO : {
+        if(resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case REQUEST_TAKE_PHOTO: {
+                    numImg++;
+                }
+                case REQUEST_TAKE_VIDEO: {
+                    numVid++;
+                }
+                case REQUEST_TAKE_AUDIO: {
+                    numMic++;
+                }
             }
         }
     }
