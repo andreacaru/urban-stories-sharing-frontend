@@ -177,7 +177,7 @@ public class MicrophoneActivity extends AppCompatActivity {
 
         File path = new File (Environment.getExternalStorageDirectory().getPath() + "/" +
                 FileInformation.ROOT_FOLDER + "/" + FileInformation.NOTES_FOLDER + "/" + folderName + "/" + FileInformation.AUDIO);
-        String micFileName = path.toString() + "/Registrazione_num_" + numMic + ".3gp";
+        String micFileName = "/Registrazione_num_" + numMic + ".3gp";
 
         File fileAudio = new File(path, micFileName);
         if (fileAudio.exists()) fileAudio.delete();

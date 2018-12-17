@@ -392,18 +392,16 @@ public class PostActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(resultCode == RESULT_OK) {
-            switch (requestCode) {
-                case REQUEST_TAKE_PHOTO: {
-                    numImg++;
-                }
-                case REQUEST_TAKE_VIDEO: {
-                    numVid++;
-                }
-                case REQUEST_TAKE_AUDIO: {
-                    numMic++;
-                }
-            }
+        if (resultCode == RESULT_OK && requestCode == REQUEST_TAKE_PHOTO) {
+            numImg++;
+        }
+
+        if (resultCode == RESULT_OK && requestCode == REQUEST_TAKE_VIDEO) {
+            numVid++;
+        }
+
+        if (resultCode == RESULT_OK && requestCode == REQUEST_TAKE_AUDIO) {
+            numMic++;
         }
     }
 }
