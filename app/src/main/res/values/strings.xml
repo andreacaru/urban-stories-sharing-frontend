@@ -25,4 +25,7 @@
     <string name="dialog_message">Vuoi continuare lo stesso?</string>
     <string name="salva_vocale">Salva</string>
     <string name="cancella_vocale">Non salvare</string>
+    <string name="cancella">cancella</string>
+    <string name="mantieni">mantieni</string>
+    <string name="vuoi_cancellare">Vuoi cancellare?</string>
 </resources>
