@@ -156,6 +156,8 @@ public class PostActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(), ModifyPhoto.class);
+                intent.putExtra("nomeCartella", folderName);
+                intent.putExtra("numPhoto", numImg);
                 startActivity(intent);
             }
         });
@@ -164,6 +166,8 @@ public class PostActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(), ModifyPhoto.class);
+                intent.putExtra("nomeCartella", folderName);
+                intent.putExtra("numVideo", numVid);
                 startActivity(intent);
             }
         });
@@ -172,6 +176,8 @@ public class PostActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(), ModifyPhoto.class);
+                intent.putExtra("nomeCartella", folderName);
+                intent.putExtra("numMic", numMic);
                 startActivity(intent);
             }
         });
