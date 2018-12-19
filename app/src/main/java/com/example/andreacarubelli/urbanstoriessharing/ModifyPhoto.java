@@ -24,7 +24,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 public class ModifyPhoto extends Activity {
-
+    int numImgCancellate = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +33,6 @@ public class ModifyPhoto extends Activity {
         Intent intent = getIntent();
         int numImmagine = intent.getExtras().getInt("numPhoto");
         String folderName = intent.getExtras().getString("nomeCartella");
-        numImmagine--;
 
         ImageView backArrow = (ImageView) findViewById(R.id.freccia_indietro);
         backArrow.setOnClickListener(new View.OnClickListener() {
@@ -54,15 +53,17 @@ public class ModifyPhoto extends Activity {
         for(int i=0; i<=numImmagine; i++){
             ImageView mImageView = new ImageView(this);
             mImageView.setLayoutParams(new android.view.ViewGroup.LayoutParams(300, 300));
-            layout.addView(mImageView);
             String imageName = "JPEG_" + i + "_" + ".jpg";
             mImageView.setTag(imageName);
             File img = new File(folder, imageName);
-            Bitmap bitmap = BitmapFactory.decodeFile(folder.toString() + "/" + imageName);
             if (img.exists()){
+                layout.addView(mImageView);
+                Bitmap bitmap = BitmapFactory.decodeFile(folder.toString() + "/" + imageName);
                 mImageView.setImageBitmap(bitmap);
+                imageViews.add(mImageView);
             }
-            imageViews.add(mImageView);
+            else mImageView.setImageResource(android.R.color.transparent);
+
         }
 
         for(ImageView imageView : imageViews){
@@ -85,65 +86,17 @@ public class ModifyPhoto extends Activity {
                     public void onClick(DialogInterface dialog, int id) {
                         Intent intent = getIntent();
                         int numImmagine = intent.getExtras().getInt("numPhoto");
-                        decrementaNumImg(numImmagine);
                         img.delete();
+                        setResult(RESULT_OK, intent);
                         ModifyPhoto.this.finish();
                     }
                 })
                 .setNegativeButton(R.string.mantieni, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        ModifyPhoto.this.finish();
                     }
                 });
         // Create the AlertDialog object and return it
         return builder.create();
     }
 
-    public int decrementaNumImg(int numImg){
-        numImg--;
-        return numImg;
-    }
-
 }
-
-/*
-    AlertDialog.Builder builder = new AlertDialog.Builder(ModifyPhoto.this);
-                    builder.setMessage(R.string.dialog_message)
-                            .setPositiveButton(R.string.salva_vocale, new DialogInterface.OnClickListener() {
-public void onClick(DialogInterface dialog, int id) {
-        img.delete();
-        ModifyPhoto.this.finish();
-        }
-        })
-        .setNegativeButton(R.string.cancella_vocale, new DialogInterface.OnClickListener() {
-public void onClick(DialogInterface dialog, int id) {
-        ModifyPhoto.this.finish();
-        }
-        });
-// Create the AlertDialog object and return it
-//return builder.create();
-
-
-for(ImageView imgView : imageViews){
-                mImageView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(ModifyPhoto.this);
-                        builder.setMessage(R.string.dialog_message)
-                                .setPositiveButton(R.string.salva_vocale, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                        img.delete();
-                                        ModifyPhoto.this.finish();
-                                    }
-                                })
-                                .setNegativeButton(R.string.cancella_vocale, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                        ModifyPhoto.this.finish();
-                                    }
-                                });
-                            // Create the AlertDialog object and return it
-                            //return builder.create();
-                    }
-                });
-            }
-*/

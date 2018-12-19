@@ -62,7 +62,7 @@ public class TextNoteActivity extends Activity {
                         public void run() {
                             finish();
                         }
-                    }, 2000);
+                    }, 1500);
                     } catch (IOException e){
                     Log.e(LOG_TAG, "prepare() failed");
                 }

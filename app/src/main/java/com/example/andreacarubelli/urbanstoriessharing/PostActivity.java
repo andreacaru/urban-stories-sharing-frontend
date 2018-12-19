@@ -42,6 +42,9 @@ public class PostActivity extends AppCompatActivity {
     public static final int CAMERA_PERMISSION = 123;
     public static final int VIDEO_PERMISSION = 999;
     public static final int STORAGE_PERMISSION = 125;
+    public static final int REQUEST_CANCELLED_PHOTO = 1234;
+    public static final int REQUEST_CANCELLED_VIDEO = 1235;
+    public static final int REQUEST_CANCELLED_AUDIO = 1236;
 
 
     private boolean mCameraPermissionGranted,mStoragePermissionGranted, mVideoPermissionGranted;
@@ -158,27 +161,27 @@ public class PostActivity extends AppCompatActivity {
                 Intent intent = new Intent(view.getContext(), ModifyPhoto.class);
                 intent.putExtra("nomeCartella", folderName);
                 intent.putExtra("numPhoto", numImg);
-                startActivity(intent);
+                startActivityForResult(intent, REQUEST_CANCELLED_PHOTO);
             }
         });
 
         modifyVideo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), ModifyPhoto.class);
+                Intent intent = new Intent(view.getContext(), ModifyVideo.class);
                 intent.putExtra("nomeCartella", folderName);
                 intent.putExtra("numVideo", numVid);
-                startActivity(intent);
+                startActivityForResult(intent, REQUEST_CANCELLED_VIDEO);
             }
         });
 
         modifyVocalNote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), ModifyPhoto.class);
+                Intent intent = new Intent(view.getContext(), ModifyVoiceNote.class);
                 intent.putExtra("nomeCartella", folderName);
                 intent.putExtra("numMic", numMic);
-                startActivity(intent);
+                startActivityForResult(intent, REQUEST_CANCELLED_AUDIO);
             }
         });
 
@@ -408,6 +411,16 @@ public class PostActivity extends AppCompatActivity {
 
         if (resultCode == RESULT_OK && requestCode == REQUEST_TAKE_AUDIO) {
             numMic++;
+        }
+
+        if(resultCode == RESULT_OK && requestCode == REQUEST_CANCELLED_PHOTO){
+            numImg--;
+        }
+        if(resultCode == RESULT_OK && requestCode == REQUEST_CANCELLED_VIDEO){
+            numVid--;
+        }
+        if(resultCode == RESULT_OK && requestCode == REQUEST_CANCELLED_AUDIO){
+            numMic--;
         }
     }
 }
