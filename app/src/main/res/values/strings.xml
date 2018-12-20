@@ -28,4 +28,5 @@
     <string name="cancella">cancella</string>
     <string name="mantieni">mantieni</string>
     <string name="vuoi_cancellare">Vuoi cancellare?</string>
+    <string name="title_activity_send">SendActivity</string>
 </resources>

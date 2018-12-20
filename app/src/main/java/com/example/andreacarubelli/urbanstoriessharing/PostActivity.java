@@ -27,7 +27,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.w3c.dom.Text;
+
 import java.io.File;
+import java.io.FileDescriptor;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -66,28 +70,7 @@ public class PostActivity extends AppCompatActivity {
 
         getStoragePermission();
 
-        EditText addressText = (EditText) findViewById(R.id.addressEditText);
-
-            Geocoder geocoder = new Geocoder(this, Locale.getDefault());
-            Bundle bundle = getIntent().getExtras();
-            if(getIntent().getExtras()!=null){
-                lat = bundle.getDouble("latitude");
-                lng = bundle.getDouble("longitude");
-            }
-
-        try{
-            List<Address> addresses = geocoder.getFromLocation(lat,lng, 1);
-            if (addresses!=null & lat!=0 & lng!=0){
-                Address fetchedAddress = addresses.get(0);
-                    String Address = fetchedAddress.getAddressLine(0).toString();
-                    addressText.setText(Address, TextView.BufferType.EDITABLE);
-            }
-            else {
-                Snackbar.make(getWindow().getDecorView().getRootView(), "Non sono riuscito a recuperare la posizione!", Snackbar.LENGTH_SHORT)
-                        .show();
-            }
-        }
-        catch (IOException e){}
+        getAddress();
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
@@ -185,6 +168,14 @@ public class PostActivity extends AppCompatActivity {
             }
         });
 
+        TextView invia = findViewById(R.id.invia);
+        invia.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                createCSV();
+            }
+        });
+
         final TextView textNumFoto = findViewById(R.id.textNumFoto);
         final TextView textNumVideo = findViewById(R.id.textNumVideo);
         final TextView textNumVocali = findViewById(R.id.textNumVocali);
@@ -211,7 +202,7 @@ public class PostActivity extends AppCompatActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        setNumFile(getNumImg(numImg), getNumVid(numVid), getNumMic(numMic));
+        setNumFile();
     }
 
     private void getCameraPermission() {
@@ -342,7 +333,7 @@ public class PostActivity extends AppCompatActivity {
         return video;
     }
 
-    private void setNumFile(int numImmagine, int numVideos, int numNotaVocale){
+    private void setNumFile(){
 
         final TextView textNumFoto = findViewById(R.id.textNumFoto);
         final TextView textNumVideo = findViewById(R.id.textNumVideo);
@@ -352,6 +343,9 @@ public class PostActivity extends AppCompatActivity {
         final TextView numVideo = findViewById(R.id.numVideo);
         final TextView numVocali = findViewById(R.id.numVocali);
 
+        int numImmagine = contaFoto();
+        int numVideos = contaVideo();
+        int numNotaVocale = contaMic();
 
 
         numFoto.setText(" "+ numImmagine);
@@ -412,15 +406,104 @@ public class PostActivity extends AppCompatActivity {
         if (resultCode == RESULT_OK && requestCode == REQUEST_TAKE_AUDIO) {
             numMic++;
         }
-
-        if(resultCode == RESULT_OK && requestCode == REQUEST_CANCELLED_PHOTO){
-            numImg--;
-        }
-        if(resultCode == RESULT_OK && requestCode == REQUEST_CANCELLED_VIDEO){
-            numVid--;
-        }
-        if(resultCode == RESULT_OK && requestCode == REQUEST_CANCELLED_AUDIO){
-            numMic--;
-        }
     }
+
+    private int contaFoto(){
+        File imageFolder = new File(Environment.getExternalStorageDirectory().getPath() + "/" +
+                FileInformation.ROOT_FOLDER + "/" + FileInformation.NOTES_FOLDER + "/" + folderName);
+        File imageFolderNew = new File(Environment.getExternalStorageDirectory().getPath() + "/" +
+                FileInformation.ROOT_FOLDER + "/" + FileInformation.NOTES_FOLDER + "/" + folderName + "/" + FileInformation.PICTURES);
+
+        File[] list = imageFolderNew.listFiles();
+        int count = 0;
+        if(list!=null){
+            for(File f: list){
+                count++;
+            }
+        }
+        return count;
+    }
+
+    private int contaVideo(){
+        File videoFolder = new File(Environment.getExternalStorageDirectory().getPath() + "/" +
+                FileInformation.ROOT_FOLDER + "/" + FileInformation.NOTES_FOLDER + "/" + folderName);
+        File videoFolderNew = new File(Environment.getExternalStorageDirectory().getPath() + "/" +
+                FileInformation.ROOT_FOLDER + "/" + FileInformation.NOTES_FOLDER + "/" + folderName + "/" + FileInformation.VIDEOS);
+
+        File[] list = videoFolderNew.listFiles();
+        int count = 0;
+        if(list!=null){
+            for(File f: list){
+                count++;
+            }
+        }
+        return count;
+    }
+
+    private int contaMic(){
+        File voiceFolder = new File(Environment.getExternalStorageDirectory().getPath() + "/" +
+                FileInformation.ROOT_FOLDER + "/" + FileInformation.NOTES_FOLDER + "/" + folderName);
+        File voiceFolderNew = new File(Environment.getExternalStorageDirectory().getPath() + "/" +
+                FileInformation.ROOT_FOLDER + "/" + FileInformation.NOTES_FOLDER + "/" + folderName + "/" + FileInformation.AUDIO);
+
+        File[] list = voiceFolderNew.listFiles();
+        int count = 0;
+        if(list!=null){
+            for(File f: list){
+                count++;
+            }
+        }
+        return count;
+
+    }
+
+    private void getAddress(){
+        EditText addressText = (EditText) findViewById(R.id.addressEditText);
+
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        Bundle bundle = getIntent().getExtras();
+        if(getIntent().getExtras()!=null){
+            lat = bundle.getDouble("latitude");
+            lng = bundle.getDouble("longitude");
+        }
+
+        try{
+            List<Address> addresses = geocoder.getFromLocation(lat,lng, 1);
+            if (addresses!=null & lat!=0 & lng!=0){
+                Address fetchedAddress = addresses.get(0);
+                String Address = fetchedAddress.getAddressLine(0).toString();
+                addressText.setText(Address, TextView.BufferType.EDITABLE);
+            }
+            else {
+                Snackbar.make(getWindow().getDecorView().getRootView(), "Non sono riuscito a recuperare la posizione!", Snackbar.LENGTH_SHORT)
+                        .show();
+            }
+        }
+        catch (IOException e){}
+    }
+
+    private void createCSV(){
+        String address, namePlace;
+        EditText addressText = (EditText) findViewById(R.id.addressEditText);
+        EditText nameText = (EditText) findViewById(R.id.nameEditText);
+        address = addressText.getText().toString();
+        namePlace = nameText.getText().toString();
+        File folder = new File(Environment.getExternalStorageDirectory().getPath() + "/" +
+                FileInformation.ROOT_FOLDER + "/" + FileInformation.NOTES_FOLDER + "/" + folderName);
+        String nameFile = "Informazioni" + ".csv";
+        try{
+            File informationFile = new File (folder, nameFile);
+            FileWriter writer = new FileWriter(informationFile);
+            writer.append(address);
+            writer.append('\n');
+            writer.append(namePlace);
+            writer.flush();
+            writer.close();
+
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+
+    }
+
 }

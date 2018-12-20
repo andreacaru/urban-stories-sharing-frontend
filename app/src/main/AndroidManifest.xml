@@ -50,8 +50,8 @@
         <activity
             android:name=".PostActivity"
             android:parentActivityName=".MapsActivity"
-            android:theme="@style/NoTitleBar"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait"
+            android:theme="@style/NoTitleBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MapsActivity" />
@@ -75,7 +75,7 @@
             android:label="@string/title_activity_modify_video" />
         <activity
             android:name=".ModifyVoiceNote"
-            android:label="@string/title_activity_modify_voice_note"></activity>
+            android:label="@string/title_activity_modify_voice_note" />
     </application>
 
 </manifest>
