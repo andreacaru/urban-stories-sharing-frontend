@@ -56,7 +56,7 @@ public class PostActivity extends AppCompatActivity {
 
     String folderName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 
-    int numImg, numVid, numMic;
+    int numImg, numVid, numMic, numNota;
 
     Geocoder geocoder;
     List<Address> addresses;
@@ -83,7 +83,7 @@ public class PostActivity extends AppCompatActivity {
             }
         });
 
-        final CardView buttonPhoto = findViewById(R.id.photoButton);
+        final ImageView buttonPhoto = findViewById(R.id.photoButton);
         buttonPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -98,7 +98,7 @@ public class PostActivity extends AppCompatActivity {
             }
         });
 
-        final CardView buttonVideo = findViewById(R.id.videoButton);
+        final ImageView buttonVideo = findViewById(R.id.videoButton);
         buttonVideo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -113,7 +113,7 @@ public class PostActivity extends AppCompatActivity {
             }
         });
 
-        final CardView buttonMic = findViewById(R.id.micButton);
+        final ImageView buttonMic = findViewById(R.id.micButton);
         buttonMic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -124,7 +124,7 @@ public class PostActivity extends AppCompatActivity {
             }
         });
 
-        final CardView buttonNote = findViewById(R.id.noteButton);
+        final ImageView buttonNote = findViewById(R.id.noteButton);
         buttonNote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -137,6 +137,7 @@ public class PostActivity extends AppCompatActivity {
         final Button modifyPhoto = findViewById(R.id.btnModificaFoto);
         final Button modifyVideo = findViewById(R.id.btnModificaVideo);
         final Button modifyVocalNote = findViewById(R.id.btnModificaNotaVocale);
+        final Button modifyNota = findViewById(R.id.btnModificaNota);
 
         modifyPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -168,6 +169,16 @@ public class PostActivity extends AppCompatActivity {
             }
         });
 
+        modifyNota.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), TextNoteActivity.class);
+                intent.putExtra("nomeCartella", folderName);
+                startActivity(intent);
+                numNota++;
+            }
+        });
+
         TextView invia = findViewById(R.id.invia);
         invia.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -180,22 +191,18 @@ public class PostActivity extends AppCompatActivity {
         final TextView textNumVideo = findViewById(R.id.textNumVideo);
         final TextView textNumVocali = findViewById(R.id.textNumVocali);
 
+        textNumFoto.setVisibility(View.INVISIBLE);
+        textNumVideo.setVisibility(View.INVISIBLE);
+        textNumVocali.setVisibility(View.INVISIBLE);
+        modifyPhoto.setVisibility(View.INVISIBLE);
+        modifyVideo.setVisibility(View.INVISIBLE);
+        modifyVocalNote.setVisibility(View.INVISIBLE);
+        modifyNota.setVisibility(View.INVISIBLE);
+
+
         final TextView numFoto = findViewById(R.id.numFoto);
         final TextView numVideo = findViewById(R.id.numVideo);
         final TextView numVocali = findViewById(R.id.numVocali);
-
-        if(numImg==0){
-            textNumFoto.setVisibility(View.INVISIBLE);
-            numFoto.setVisibility(View.INVISIBLE);
-        }
-        if(numVid==0){
-            textNumVideo.setVisibility(View.INVISIBLE);
-            numVideo.setVisibility(View.INVISIBLE);
-        }
-        if(numMic==0){
-            textNumVocali.setVisibility(View.INVISIBLE);
-            numVocali.setVisibility(View.INVISIBLE);
-        }
 
     }
 
@@ -335,6 +342,11 @@ public class PostActivity extends AppCompatActivity {
 
     private void setNumFile(){
 
+        final Button modifyPhoto = findViewById(R.id.btnModificaFoto);
+        final Button modifyVideo = findViewById(R.id.btnModificaVideo);
+        final Button modifyVocalNote = findViewById(R.id.btnModificaNotaVocale);
+        final Button modifyNota = findViewById(R.id.btnModificaNota);
+
         final TextView textNumFoto = findViewById(R.id.textNumFoto);
         final TextView textNumVideo = findViewById(R.id.textNumVideo);
         final TextView textNumVocali = findViewById(R.id.textNumVocali);
@@ -346,6 +358,7 @@ public class PostActivity extends AppCompatActivity {
         int numImmagine = contaFoto();
         int numVideos = contaVideo();
         int numNotaVocale = contaMic();
+        int numNota = contaNota();
 
 
         numFoto.setText(" "+ numImmagine);
@@ -356,28 +369,40 @@ public class PostActivity extends AppCompatActivity {
         if (numImmagine == 0){
             numFoto.setVisibility(View.INVISIBLE);
             textNumFoto.setVisibility(View.INVISIBLE);
+            modifyPhoto.setVisibility(View.INVISIBLE);
         } else {
             numFoto.setVisibility(View.VISIBLE);
             textNumFoto.setVisibility(View.VISIBLE);
+            modifyPhoto.setVisibility(View.VISIBLE);
             numFoto.setText(" "+ numImmagine);
         }
 
         if(numVideos == 0){
             numVideo.setVisibility(View.INVISIBLE);
             textNumVideo.setVisibility(View.INVISIBLE);
+            modifyVideo.setVisibility(View.INVISIBLE);
         } else {
             textNumVideo.setVisibility(View.VISIBLE);
             numVideo.setVisibility(View.VISIBLE);
+            modifyVideo.setVisibility(View.VISIBLE);
             numVideo.setText(" " + numVideos);
         }
 
         if(numNotaVocale == 0){
             numVocali.setVisibility(View.INVISIBLE);
             textNumVocali.setVisibility(View.INVISIBLE);
+            modifyVocalNote.setVisibility(View.INVISIBLE);
         } else {
             textNumVocali.setVisibility(View.VISIBLE);
             numVocali.setVisibility(View.VISIBLE);
+            modifyVocalNote.setVisibility(View.VISIBLE);
             numVocali.setText(" " + numNotaVocale);
+        }
+
+        if(numNota == 0){
+            modifyNota.setVisibility(View.INVISIBLE);
+        } else {
+            modifyNota.setVisibility(View.VISIBLE);
         }
 
 
@@ -457,6 +482,23 @@ public class PostActivity extends AppCompatActivity {
 
     }
 
+    private int contaNota(){
+        File voiceFolder = new File(Environment.getExternalStorageDirectory().getPath() + "/" +
+                FileInformation.ROOT_FOLDER + "/" + FileInformation.NOTES_FOLDER + "/" + folderName);
+        File voiceFolderNew = new File(Environment.getExternalStorageDirectory().getPath() + "/" +
+                FileInformation.ROOT_FOLDER + "/" + FileInformation.NOTES_FOLDER + "/" + folderName + "/" + FileInformation.NOTES);
+
+        File[] list = voiceFolderNew.listFiles();
+        int count = 0;
+        if(list!=null){
+            for(File f: list){
+                count++;
+            }
+        }
+        return count;
+
+    }
+
     private void getAddress(){
         EditText addressText = (EditText) findViewById(R.id.addressEditText);
 
@@ -490,6 +532,9 @@ public class PostActivity extends AppCompatActivity {
         namePlace = nameText.getText().toString();
         File folder = new File(Environment.getExternalStorageDirectory().getPath() + "/" +
                 FileInformation.ROOT_FOLDER + "/" + FileInformation.NOTES_FOLDER + "/" + folderName);
+        if (!(folder.exists())){
+            folder.mkdirs();
+        }
         String nameFile = "Informazioni" + ".csv";
         try{
             File informationFile = new File (folder, nameFile);

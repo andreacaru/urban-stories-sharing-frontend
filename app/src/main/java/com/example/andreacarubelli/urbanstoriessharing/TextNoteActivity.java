@@ -91,14 +91,26 @@ public class TextNoteActivity extends Activity {
 
         StringBuilder text = new StringBuilder();
         File file = new File(path, fileName);
-
+        int numRighe = contaRighe(file);
+        int count=0;
         try {
             BufferedReader br = new BufferedReader(new FileReader(file));
             String line;
-
             while ((line = br.readLine()) != null) {
-                text.append(line);
-                text.append('\n');
+                count++;
+                if(numRighe==1){
+                    text.append(line);
+                }
+                else{
+                    if(count == numRighe){
+                        text.append(line);
+                    }
+                    else{
+                        text.append(line);
+                        text.append('\n');
+                    }
+
+                }
             }
             br.close();
         }
@@ -106,6 +118,21 @@ public class TextNoteActivity extends Activity {
             //You'll need to add proper error handling here
         }
         return text;
+    }
+
+    public int contaRighe(File file){
+        int count=0;
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            String line;
+            while ((line = br.readLine()) != null) {
+                count++;
+            }
+            br.close();
+        }catch (IOException e) {
+            //You'll need to add proper error handling here
+        }
+        return count;
     }
 
 }

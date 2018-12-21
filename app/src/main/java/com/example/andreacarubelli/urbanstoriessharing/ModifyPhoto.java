@@ -14,6 +14,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -42,6 +43,8 @@ public class ModifyPhoto extends Activity {
             }
         });
 
+        GridLayout gridlayout = new GridLayout(this);
+        gridlayout.setColumnCount(3);
         LinearLayout layout = findViewById(R.id.modifyPhoto);
         File imageFolder = new File(Environment.getExternalStorageDirectory().getPath() + "/" +
                 FileInformation.ROOT_FOLDER + "/" + FileInformation.NOTES_FOLDER + "/" + folderName);

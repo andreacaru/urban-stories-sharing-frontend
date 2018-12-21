@@ -84,7 +84,7 @@
 
         <!-- Column 1 -->
         <android.support.v7.widget.CardView
-            android:id="@+id/photoButton"
+
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_columnWeight="1"
@@ -103,6 +103,7 @@
                 android:orientation="vertical">
 
                 <ImageView
+                    android:id="@+id/photoButton"
                     android:layout_width="45dp"
                     android:layout_height="45dp"
                     android:layout_gravity="center_horizontal"
@@ -158,7 +159,7 @@
 
         <!-- Column 2 -->
         <android.support.v7.widget.CardView
-            android:id="@+id/videoButton"
+
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_columnWeight="1"
@@ -177,6 +178,7 @@
                 android:orientation="vertical">
 
                 <ImageView
+                    android:id="@+id/videoButton"
                     android:layout_width="45dp"
                     android:layout_height="45dp"
                     android:layout_gravity="center_horizontal"
@@ -232,7 +234,7 @@
 
         <!-- Column 1 -->
         <android.support.v7.widget.CardView
-            android:id="@+id/micButton"
+
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_columnWeight="1"
@@ -251,6 +253,7 @@
                 android:orientation="vertical">
 
                 <ImageView
+                    android:id="@+id/micButton"
                     android:layout_width="45dp"
                     android:layout_height="45dp"
                     android:layout_gravity="center_horizontal"
@@ -301,7 +304,7 @@
 
         <!-- Column 2 -->
         <android.support.v7.widget.CardView
-            android:id="@+id/noteButton"
+
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_columnWeight="1"
@@ -320,6 +323,7 @@
                 android:orientation="vertical">
 
                 <ImageView
+                    android:id="@+id/noteButton"
                     android:layout_width="45dp"
                     android:layout_height="45dp"
                     android:layout_gravity="center_horizontal"
@@ -332,6 +336,16 @@
                     android:textAlignment="center"
                     android:textColor="@android:color/black"
                     android:textSize="18sp" />
+
+                <android.support.design.button.MaterialButton
+                    android:id="@+id/btnModificaNota"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/stringModifica"
+                    android:textColor="@color/colorModifyButton"
+                    app:rippleColor="@color/colorModifyButton"></android.support.design.button.MaterialButton>
 
             </LinearLayout>
 
