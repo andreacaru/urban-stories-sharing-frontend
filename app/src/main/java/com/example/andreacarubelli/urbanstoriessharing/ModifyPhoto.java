@@ -11,9 +11,13 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.os.Environment;
 import android.support.v7.app.AlertDialog;
+
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
+
+
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -43,9 +47,9 @@ public class ModifyPhoto extends Activity {
             }
         });
 
-        GridLayout gridlayout = new GridLayout(this);
+        GridLayout gridlayout = findViewById(R.id.grid_view);
         gridlayout.setColumnCount(3);
-        LinearLayout layout = findViewById(R.id.modifyPhoto);
+        //LinearLayout layout = findViewById(R.id.modifyPhoto);
         File imageFolder = new File(Environment.getExternalStorageDirectory().getPath() + "/" +
                 FileInformation.ROOT_FOLDER + "/" + FileInformation.NOTES_FOLDER + "/" + folderName);
         final File folder = new File(Environment.getExternalStorageDirectory().getPath() + "/" +
@@ -55,14 +59,15 @@ public class ModifyPhoto extends Activity {
 
         for(int i=0; i<=numImmagine; i++){
             ImageView mImageView = new ImageView(this);
-            mImageView.setLayoutParams(new android.view.ViewGroup.LayoutParams(300, 300));
+            mImageView.setLayoutParams(new ViewGroup.LayoutParams(300, 300));
             String imageName = "JPEG_" + i + "_" + ".jpg";
             mImageView.setTag(imageName);
             File img = new File(folder, imageName);
             if (img.exists()){
-                layout.addView(mImageView);
+                gridlayout.addView(mImageView);
                 Bitmap bitmap = BitmapFactory.decodeFile(folder.toString() + "/" + imageName);
                 mImageView.setImageBitmap(bitmap);
+                mImageView.setPadding(0,0,30,30);
                 imageViews.add(mImageView);
             }
             else mImageView.setImageResource(android.R.color.transparent);

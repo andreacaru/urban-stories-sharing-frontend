@@ -530,6 +530,12 @@ public class PostActivity extends AppCompatActivity {
         EditText nameText = (EditText) findViewById(R.id.nameEditText);
         address = addressText.getText().toString();
         namePlace = nameText.getText().toString();
+        double lat=0, lng=0;
+        Bundle bundle = getIntent().getExtras();
+        if(getIntent().getExtras()!=null){
+            lat = bundle.getDouble("latitude");
+            lng = bundle.getDouble("longitude");
+        }
         File folder = new File(Environment.getExternalStorageDirectory().getPath() + "/" +
                 FileInformation.ROOT_FOLDER + "/" + FileInformation.NOTES_FOLDER + "/" + folderName);
         if (!(folder.exists())){
@@ -539,9 +545,19 @@ public class PostActivity extends AppCompatActivity {
         try{
             File informationFile = new File (folder, nameFile);
             FileWriter writer = new FileWriter(informationFile);
+            writer.append("Address: ");
             writer.append(address);
             writer.append('\n');
+            writer.append("Place: ");
             writer.append(namePlace);
+            writer.append('\n');
+            writer.append("Latitude: ");
+            String latitudine = Double.toString(lat);
+            writer.append(latitudine);
+            writer.append('\n');
+            writer.append("Longitude: ");
+            String longitudine = Double.toString(lng);
+            writer.append(longitudine);
             writer.flush();
             writer.close();
 

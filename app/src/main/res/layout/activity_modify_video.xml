@@ -29,14 +29,13 @@
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
 
-    <ScrollView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-        <LinearLayout
-            android:id="@+id/modifyVideo"
-            android:layout_width="fill_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-        </LinearLayout>
-    </ScrollView>
+    <GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/grid_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="14dp"
+        android:alignmentMode="alignMargins"
+        android:gravity="center">
+
+    </GridLayout>
 </LinearLayout>

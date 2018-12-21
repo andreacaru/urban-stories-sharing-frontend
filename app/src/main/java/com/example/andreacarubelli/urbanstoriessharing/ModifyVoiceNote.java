@@ -44,6 +44,9 @@ public class ModifyVoiceNote extends Activity {
 
         ArrayList<ImageView> imageViews = new ArrayList<ImageView>();
 
+        LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        llp.setMargins(30, 30, 0, 0); // llp.setMargins(left, top, right, bottom);
+
         for(int i=0; i<=numMic; i++){
             ImageView mImageView = new ImageView(this);
             TextView textView = new TextView(this);
@@ -54,7 +57,9 @@ public class ModifyVoiceNote extends Activity {
             if (img.exists()){
                 layout.addView(textView);
                 layout.addView(mImageView);
-                textView.setText("Registrazione: " + i);
+                textView.setText("Registrazione " + i);
+                textView.setLayoutParams(llp);
+                mImageView.setPadding(15,15,0,15);
                 mImageView.setImageResource(R.drawable.ic_mic_black_24dp);
                 imageViews.add(mImageView);
             }
