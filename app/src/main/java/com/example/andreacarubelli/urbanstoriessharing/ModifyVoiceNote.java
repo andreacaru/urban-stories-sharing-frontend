@@ -3,13 +3,17 @@ package com.example.andreacarubelli.urbanstoriessharing;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.app.Activity;
 import android.os.Environment;
+import android.support.design.button.MaterialButton;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
+import android.widget.Button;
+import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -36,38 +40,54 @@ public class ModifyVoiceNote extends Activity {
             }
         });
 
-        LinearLayout layout = findViewById(R.id.modifyVoiceNote);
+        GridLayout gridlayout = findViewById(R.id.grid_view);
+        gridlayout.setColumnCount(3);
+
+        //LinearLayout layout = findViewById(R.id.modifyVoiceNote);
         File voiceFolder = new File(Environment.getExternalStorageDirectory().getPath() + "/" +
                 FileInformation.ROOT_FOLDER + "/" + FileInformation.NOTES_FOLDER + "/" + folderName);
         final File folder = new File(Environment.getExternalStorageDirectory().getPath() + "/" +
                 FileInformation.ROOT_FOLDER + "/" + FileInformation.NOTES_FOLDER + "/" + folderName + "/" + FileInformation.AUDIO);
 
-        ArrayList<ImageView> imageViews = new ArrayList<ImageView>();
+        ArrayList<Button> imageViews = new ArrayList<Button>();
 
-        LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        llp.setMargins(30, 30, 0, 0); // llp.setMargins(left, top, right, bottom);
+        //LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        //llp.setMargins(30, 30, 0, 0); // llp.setMargins(left, top, right, bottom);
 
         for(int i=0; i<=numMic; i++){
+
+            LinearLayout layout = new LinearLayout(this);
             ImageView mImageView = new ImageView(this);
             TextView textView = new TextView(this);
+            MaterialButton elimina = new MaterialButton(this);
+
+            layout.setOrientation(LinearLayout.VERTICAL);
+
+            elimina.setText("elimina");
+            textView.setText("Registrazione " + i);
+
+            elimina.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorButton)));
+
             mImageView.setLayoutParams(new android.view.ViewGroup.LayoutParams(300, 300));
             String voiceName = "/Registrazione_num_" + i + ".3gp";
-            mImageView.setTag(voiceName);
+            layout.addView(textView);
+            layout.addView(mImageView);
+            layout.addView(elimina);
+
+            elimina.setTag(voiceName);
             File img = new File(folder, voiceName);
+
             if (img.exists()){
-                layout.addView(textView);
-                layout.addView(mImageView);
-                textView.setText("Registrazione " + i);
-                textView.setLayoutParams(llp);
-                mImageView.setPadding(15,15,0,15);
+                gridlayout.addView(layout);
+                layout.setPadding(0,0,30,30);
                 mImageView.setImageResource(R.drawable.ic_mic_black_24dp);
-                imageViews.add(mImageView);
+                imageViews.add(elimina);
             }
             else mImageView.setImageResource(android.R.color.transparent);
 
         }
 
-        for(ImageView imageView : imageViews){
+        for(Button imageView : imageViews){
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

@@ -1,8 +1,11 @@
 package com.example.andreacarubelli.urbanstoriessharing;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.Image;
@@ -10,14 +13,18 @@ import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.app.Activity;
 import android.os.Environment;
+import android.support.design.button.MaterialButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 
 
+import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -28,9 +35,12 @@ import com.google.android.gms.common.api.internal.ListenerHolder;
 import java.io.File;
 import java.util.ArrayList;
 
+import static com.example.andreacarubelli.urbanstoriessharing.R.color.colorButton;
+
 public class ModifyPhoto extends Activity {
     int numImgCancellate = 0;
 
+    @SuppressLint("ResourceAsColor")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,32 +59,45 @@ public class ModifyPhoto extends Activity {
 
         GridLayout gridlayout = findViewById(R.id.grid_view);
         gridlayout.setColumnCount(3);
-        //LinearLayout layout = findViewById(R.id.modifyPhoto);
+
         File imageFolder = new File(Environment.getExternalStorageDirectory().getPath() + "/" +
                 FileInformation.ROOT_FOLDER + "/" + FileInformation.NOTES_FOLDER + "/" + folderName);
         final File folder = new File(Environment.getExternalStorageDirectory().getPath() + "/" +
                 FileInformation.ROOT_FOLDER + "/" + FileInformation.NOTES_FOLDER + "/" + folderName + "/" + FileInformation.PICTURES);
 
-        ArrayList<ImageView> imageViews = new ArrayList<ImageView>();
+        ArrayList<Button> imageViews = new ArrayList<Button>();
 
         for(int i=0; i<=numImmagine; i++){
+
+            LinearLayout layout = new LinearLayout(this);
             ImageView mImageView = new ImageView(this);
+            MaterialButton elimina = new MaterialButton(this);
+            layout.setOrientation(LinearLayout.VERTICAL);
+
+            elimina.setText("elimina");
+
+            elimina.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorButton)));
+
+
             mImageView.setLayoutParams(new ViewGroup.LayoutParams(300, 300));
+            layout.addView(mImageView);
+            layout.addView(elimina);
+
             String imageName = "JPEG_" + i + "_" + ".jpg";
-            mImageView.setTag(imageName);
+            elimina.setTag(imageName);
             File img = new File(folder, imageName);
             if (img.exists()){
-                gridlayout.addView(mImageView);
+                gridlayout.addView(layout);
                 Bitmap bitmap = BitmapFactory.decodeFile(folder.toString() + "/" + imageName);
                 mImageView.setImageBitmap(bitmap);
-                mImageView.setPadding(0,0,30,30);
-                imageViews.add(mImageView);
+                layout.setPadding(0,0,30,30);
+                imageViews.add(elimina);
             }
             else mImageView.setImageResource(android.R.color.transparent);
 
         }
 
-        for(ImageView imageView : imageViews){
+        for(Button imageView : imageViews){
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

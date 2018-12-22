@@ -24,6 +24,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -83,7 +84,7 @@ public class PostActivity extends AppCompatActivity {
             }
         });
 
-        final ImageView buttonPhoto = findViewById(R.id.photoButton);
+        final LinearLayout buttonPhoto = findViewById(R.id.fotoTestoFoto);
         buttonPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -98,7 +99,7 @@ public class PostActivity extends AppCompatActivity {
             }
         });
 
-        final ImageView buttonVideo = findViewById(R.id.videoButton);
+        final LinearLayout buttonVideo = findViewById(R.id.videoTestoVideo);
         buttonVideo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -113,7 +114,7 @@ public class PostActivity extends AppCompatActivity {
             }
         });
 
-        final ImageView buttonMic = findViewById(R.id.micButton);
+        final LinearLayout buttonMic = findViewById(R.id.micTestoMic);
         buttonMic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -124,7 +125,7 @@ public class PostActivity extends AppCompatActivity {
             }
         });
 
-        final ImageView buttonNote = findViewById(R.id.noteButton);
+        final LinearLayout buttonNote = findViewById(R.id.notaTestoNota);
         buttonNote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -543,21 +544,16 @@ public class PostActivity extends AppCompatActivity {
         }
         String nameFile = "Informazioni" + ".csv";
         try{
+            String latitudine = Double.toString(lat);
+            String longitudine = Double.toString(lng);
+
             File informationFile = new File (folder, nameFile);
             FileWriter writer = new FileWriter(informationFile);
-            writer.append("Address: ");
-            writer.append(address);
+
+            writer.append("Address" + "#" + "Place" + "#" + "Latitude" + "#" + "Longitude");
             writer.append('\n');
-            writer.append("Place: ");
-            writer.append(namePlace);
-            writer.append('\n');
-            writer.append("Latitude: ");
-            String latitudine = Double.toString(lat);
-            writer.append(latitudine);
-            writer.append('\n');
-            writer.append("Longitude: ");
-            String longitudine = Double.toString(lng);
-            writer.append(longitudine);
+            writer.append(address + "#" + namePlace + "#" + latitudine + "#" + longitudine);
+
             writer.flush();
             writer.close();
 
