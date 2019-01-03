@@ -184,6 +184,8 @@ public class PostActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 createCSV();
+                Send sendObject = new Send();
+                sendObject.uploadImage(view.getContext(), folderName);
             }
         });
 
