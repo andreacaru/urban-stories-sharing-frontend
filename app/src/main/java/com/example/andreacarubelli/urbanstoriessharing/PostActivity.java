@@ -176,7 +176,6 @@ public class PostActivity extends AppCompatActivity {
                 Intent intent = new Intent(view.getContext(), TextNoteActivity.class);
                 intent.putExtra("nomeCartella", folderName);
                 startActivity(intent);
-                numNota++;
             }
         });
 
@@ -484,12 +483,12 @@ public class PostActivity extends AppCompatActivity {
     }
 
     private int contaNota(){
-        File voiceFolder = new File(Environment.getExternalStorageDirectory().getPath() + "/" +
+        File noteFolder = new File(Environment.getExternalStorageDirectory().getPath() + "/" +
                 FileInformation.ROOT_FOLDER + "/" + FileInformation.NOTES_FOLDER + "/" + folderName);
-        File voiceFolderNew = new File(Environment.getExternalStorageDirectory().getPath() + "/" +
+        File noteFolderNew = new File(Environment.getExternalStorageDirectory().getPath() + "/" +
                 FileInformation.ROOT_FOLDER + "/" + FileInformation.NOTES_FOLDER + "/" + folderName + "/" + FileInformation.NOTES);
 
-        File[] list = voiceFolderNew.listFiles();
+        File[] list = noteFolderNew.listFiles();
         int count = 0;
         if(list!=null){
             for(File f: list){

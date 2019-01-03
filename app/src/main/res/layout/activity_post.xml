@@ -126,8 +126,8 @@
                 <android.support.design.button.MaterialButton
                     android:id="@+id/btnModificaFoto"
                     style="@style/Widget.MaterialComponents.Button.TextButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="36dp"
+                    android:layout_width="110dp"
+                    android:layout_height="39dp"
                     android:layout_gravity="center_horizontal"
                     android:text="@string/stringModifica"
                     android:textColor="@color/colorModifyButton"
@@ -208,8 +208,8 @@
                 <android.support.design.button.MaterialButton
                     android:id="@+id/btnModificaVideo"
                     style="@style/Widget.MaterialComponents.Button.TextButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="36dp"
+                    android:layout_width="110dp"
+                    android:layout_height="39dp"
                     android:layout_gravity="center_horizontal"
                     android:text="@string/stringModifica"
                     android:textColor="@color/colorModifyButton"
@@ -291,8 +291,8 @@
                 <android.support.design.button.MaterialButton
                     android:id="@+id/btnModificaNotaVocale"
                     style="@style/Widget.MaterialComponents.Button.TextButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="36dp"
+                    android:layout_width="110dp"
+                    android:layout_height="39dp"
                     android:layout_gravity="center_horizontal"
                     android:text="@string/stringModifica"
                     android:textColor="@color/colorModifyButton"
@@ -364,18 +364,19 @@
                     android:textColor="@android:color/black"
                     android:textSize="18sp" />
 
-            </LinearLayout>
-
                 <android.support.design.button.MaterialButton
                     android:id="@+id/btnModificaNota"
                     style="@style/Widget.MaterialComponents.Button.TextButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="36dp"
+                    android:layout_width="110dp"
+                    android:layout_height="39dp"
                     android:layout_gravity="center_horizontal"
                     android:text="@string/stringModifica"
                     android:textColor="@color/colorModifyButton"
-                    app:rippleColor="@color/colorModifyButton"></android.support.design.button.MaterialButton>
+                    app:rippleColor="@color/colorModifyButton">
 
+                </android.support.design.button.MaterialButton>
+
+            </LinearLayout>
             </LinearLayout>
 
         </android.support.v7.widget.CardView>
