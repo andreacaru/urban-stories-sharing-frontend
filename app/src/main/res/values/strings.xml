@@ -29,4 +29,7 @@
     <string name="mantieni">mantieni</string>
     <string name="vuoi_cancellare">Vuoi cancellare?</string>
     <string name="title_activity_send">SendActivity</string>
+    <string name="dialog_message_post">Sei sicuro di voler tornare indietro? Tutti i dati andranno persi</string>
+    <string name="positive_message_post">Si</string>
+    <string name="negative_message_post">No</string>
 </resources>

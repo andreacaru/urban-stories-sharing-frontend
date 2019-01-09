@@ -1,13 +1,16 @@
 package com.example.andreacarubelli.urbanstoriessharing;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
+import android.media.MediaRecorder;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Environment;
@@ -17,6 +20,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -98,7 +102,13 @@ public class PostActivity extends AppCompatActivity {
         backArrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finish();
+                if((contaFoto()==0) && (contaMic()==0) && (contaVideo()==0) && (contaNota()==0)) {
+                    finish();
+                }
+                else {
+                    Dialog alert = onCreateDialog();
+                    alert.show();
+                }
             }
         });
 
@@ -521,7 +531,6 @@ public class PostActivity extends AppCompatActivity {
 
     }
 
-
     //Recupero indirizzo automatimaticamente se il dispositivo recupera la posizione
     private void getAddress(){
         EditText addressText = (EditText) findViewById(R.id.addressEditText);
@@ -586,7 +595,6 @@ public class PostActivity extends AppCompatActivity {
         }
 
     }
-
 
     //UPLOAD//
 
@@ -907,4 +915,30 @@ public class PostActivity extends AppCompatActivity {
         else return false;
     }
 
+    public Dialog onCreateDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(PostActivity.this);
+        builder.setMessage(R.string.dialog_message_post)
+                .setPositiveButton(R.string.positive_message_post, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        PostActivity.this.finish();
+                    }
+                })
+                .setNegativeButton(R.string.negative_message_post, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                    }
+                });
+        // Create the AlertDialog object and return it
+        return builder.create();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if((contaFoto()==0) && (contaMic()==0) && (contaVideo()==0) && (contaNota()==0)) {
+            finish();
+        }
+        else {
+            Dialog alert = onCreateDialog();
+            alert.show();
+        }
+    }
 }
