@@ -1,6 +1,8 @@
 package com.example.andreacarubelli.urbanstoriessharing;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.app.Activity;
@@ -8,6 +10,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -28,22 +31,26 @@ public class TextNoteActivity extends Activity {
     private static final String LOG_TAG = "NoteTest";
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_text_note);
         Intent intent = getIntent();
         final String folderName = intent.getExtras().getString("nomeCartella");
+        final EditText textInput = (EditText) findViewById(R.id.noteEditText);
 
         ImageView backArrow =  (ImageView) findViewById(R.id.freccia_indietro);
         backArrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finish();
+                if(textInput.length() == 0) finish();
+                else {
+                    Dialog alert = onCreateDialog();
+                    alert.show();
+                }
             }
         });
-
-        final EditText textInput = (EditText) findViewById(R.id.noteEditText);
 
         Button sendButton = (Button) findViewById(R.id.SendButtonNote);
 
@@ -134,5 +141,36 @@ public class TextNoteActivity extends Activity {
         }
         return count;
     }
+
+    public Dialog onCreateDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(TextNoteActivity.this);
+        builder.setMessage(R.string.dialog_message_note)
+                .setPositiveButton(R.string.positive_message_post, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        TextNoteActivity.this.finish();
+                    }
+                })
+                .setNegativeButton(R.string.negative_message_post, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                    }
+                });
+        // Create the AlertDialog object and return it
+        return builder.create();
+    }
+
+    @Override
+    public void onBackPressed() {
+        final EditText textInput = (EditText) findViewById(R.id.noteEditText);
+        if(textInput.length() == 0){
+            finish();
+        }
+        else {
+            Dialog alert = onCreateDialog();
+            alert.show();
+        }
+    }
+
+
+
 
 }

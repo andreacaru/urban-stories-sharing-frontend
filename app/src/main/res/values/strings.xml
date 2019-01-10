@@ -32,4 +32,5 @@
     <string name="dialog_message_post">Sei sicuro di voler tornare indietro? Tutti i dati andranno persi</string>
     <string name="positive_message_post">Si</string>
     <string name="negative_message_post">No</string>
+    <string name="dialog_message_note">Sei sicuro di voler tornare indietro? La nota andrà persa</string>
 </resources>

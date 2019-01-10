@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
+import android.media.MediaMetadataRetriever;
 import android.media.MediaRecorder;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
@@ -632,9 +633,9 @@ public class PostActivity extends AppCompatActivity {
             for(File f: list){
 
                 final Bitmap bitmap = BitmapFactory.decodeFile(f.toString());
-                params.put("size", "1");
-                params.put("width", "");
-                params.put("height", "");
+                params.put("size", Long.toString(f.length()));
+                params.put("width", Integer.toString(bitmap.getWidth()));
+                params.put("height", Integer.toString(bitmap.getHeight()));
                 params.put("format", "jpg");
                 params.put("image_data", imgToString(bitmap));
                 params.put("latitude",  Double.toString(lat));
@@ -683,13 +684,25 @@ public class PostActivity extends AppCompatActivity {
         File[] list = videoFolderaNew.listFiles();
         for(File f: list){
 
-            params.put("size", "1");
+            MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+            retriever.setDataSource(f.getPath());
+
+            int width = Integer.valueOf(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH));
+            int height = Integer.valueOf(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT));
+            int bitrate = Integer.valueOf(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_BITRATE));
+            //int framerate = Integer.valueOf(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_CAPTURE_FRAMERATE));
+
+            String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+
+            retriever.release();
+
+            params.put("size", Long.toString(f.length()));
             params.put("format", "mp4");
-            params.put("duration", "1");
-            params.put("width", "1");
-            params.put("height", "1");
-            params.put("bit_rate", "3");
-            params.put("frame_rate", "3");
+            params.put("duration", time);
+            params.put("width", Integer.toString(width));
+            params.put("height", Integer.toString(height));
+            params.put("bit_rate", Integer.toString(bitrate));
+            params.put("frame_rate", "30");
             params.put("video_data", vidToString(f));
             params.put("latitude",  Double.toString(lat));
             params.put("longitude", Double.toString(lng));
@@ -718,7 +731,7 @@ public class PostActivity extends AppCompatActivity {
     }
 
     //Upload Note vocali
-    public void uploadMic(String folderName){
+    public void uploadMic(String folderName)  {
 
         jsonObject = new JSONObject();
         HashMap<String, String> params = new HashMap<String, String>();
@@ -736,10 +749,18 @@ public class PostActivity extends AppCompatActivity {
         File[] list = micFolderaNew.listFiles();
         for(File f: list){
 
-            params.put("size", "1");
+            MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+            retriever.setDataSource(f.getPath());
+
+            int bitrate = Integer.valueOf(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_BITRATE));
+            String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+
+            retriever.release();
+
+            params.put("size", Long.toString(f.length()));
             params.put("format", "3gp");
-            params.put("duration", "1");
-            params.put("bit_rate", "1");
+            params.put("duration", time);
+            params.put("bit_rate", Integer.toString(bitrate));
             params.put("audio_data", micToString(f));
             params.put("latitude",  Double.toString(lat));
             params.put("longitude", Double.toString(lng));
@@ -863,7 +884,6 @@ public class PostActivity extends AppCompatActivity {
             for (int readNum; (readNum = v_input.read(byteBufferString)) != -1;)
             {
                 objByteArrayOS.write(byteBufferString, 0, readNum);
-                Log.d("videook", "vidToString: ok");
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -970,7 +990,7 @@ public class PostActivity extends AppCompatActivity {
         }
     }
 
-    //Leggo contenuto nota scritta -> Metodo di appoggio
+    //Leggo contenuto nota scritta -> Metodo di appoggio per inviarla al DB
     private StringBuilder readFile (){
         final String path = Environment.getExternalStorageDirectory().getPath() + "/" +
                 FileInformation.ROOT_FOLDER + "/" + FileInformation.NOTES_FOLDER + "/" + folderName + "/" + FileInformation.NOTES;
@@ -1008,7 +1028,7 @@ public class PostActivity extends AppCompatActivity {
         return text;
     }
 
-    //conto righe all'interno della nota scritta -> metodo di appoggio
+    //conto righe all'interno della nota scritta -> metodo di appoggio per poi inviare la nota al DB
     public int contaRighe(File file){
         int count=0;
         try {
