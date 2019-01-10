@@ -7,4 +7,8 @@ public interface FileInformation {
         String VIDEOS = "Videos";
         String NOTES = "Notes";
         String AUDIO = "Audio";
+        String texts = "texts";
+        String photos = "photos";
+        String videos = "videos";
+        String audios = "audios";
 }

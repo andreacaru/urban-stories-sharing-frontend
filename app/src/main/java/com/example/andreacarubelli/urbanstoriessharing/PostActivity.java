@@ -26,6 +26,7 @@ import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -38,17 +39,24 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 
+import org.apache.commons.io.FileUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileDescriptor;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -83,7 +91,7 @@ public class PostActivity extends AppCompatActivity {
 
     private JSONObject jsonObject;
 
-    String URL = "";
+    String URL = "http://192.168.2.4:8001/api/";
 
 
     @Override
@@ -212,10 +220,15 @@ public class PostActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 createCSV();
-                if(controllaFoto()) uploadImage(folderName);
-                if(controllaVideo()) uploadVideo(folderName);
-                if(controllaVocali()) uploadMic(folderName);
-                if(controllaNota()) uploadNota(folderName);
+                if(controllaNota()){
+                    uploadNota(folderName);
+                    if(controllaFoto()) uploadImage(folderName);
+                    if(controllaVideo()) uploadVideo(folderName);
+                    if(controllaVocali()) uploadMic(folderName);
+                    //uploadCSV(folderName);
+                }
+
+
             }
         });
 
@@ -602,25 +615,38 @@ public class PostActivity extends AppCompatActivity {
     public void uploadImage(String folderName){
 
         jsonObject = new JSONObject();
+        HashMap<String, String> params = new HashMap<String, String>();
+        Bundle bundle = getIntent().getExtras();
+        if(getIntent().getExtras()!=null){
+            lat = bundle.getDouble("latitude");
+            lng = bundle.getDouble("longitude");
+        }
 
         File imageFolder = new File(Environment.getExternalStorageDirectory().getPath() + "/" +
                 FileInformation.ROOT_FOLDER + "/" + FileInformation.NOTES_FOLDER + "/" + folderName);
         final File imageFolderaNew = new File(Environment.getExternalStorageDirectory().getPath() + "/" +
                 FileInformation.ROOT_FOLDER + "/" + FileInformation.NOTES_FOLDER + "/" + folderName + "/" + FileInformation.PICTURES);
 
-        File[] list = imageFolderaNew.listFiles();
-        if(list!=null){
-            for(File f: list){
-                final Bitmap bitmap = BitmapFactory.decodeFile(imageFolderaNew.toString());
 
-                StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
-                        new Response.Listener<String>() {
+        File[] list = imageFolderaNew.listFiles();
+            for(File f: list){
+
+                final Bitmap bitmap = BitmapFactory.decodeFile(f.toString());
+                params.put("size", "1");
+                params.put("width", "");
+                params.put("height", "");
+                params.put("format", "jpg");
+                params.put("image_data", imgToString(bitmap));
+                params.put("latitude",  Double.toString(lat));
+                params.put("longitude", Double.toString(lng));
+
+
+                JsonObjectRequest jsonRequest = new JsonObjectRequest(URL + FileInformation.photos, new JSONObject(params),
+                        new Response.Listener<JSONObject>() {
                             @Override
-                            public void onResponse(String response) {
+                            public void onResponse(JSONObject response) {
                                 try {
-                                    JSONObject jsonObject = new JSONObject(response);
-                                    String Response = jsonObject.getString("response");
-                                    Toast.makeText(PostActivity.this, Response, Toast.LENGTH_LONG).show();
+                                    response.getString("id");
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -629,32 +655,25 @@ public class PostActivity extends AppCompatActivity {
                         }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        //Log.i("Mysmart",""+error);
 
                     }
-                }){
-                    @Override
-                    protected Map<String, String> getParams() throws AuthFailureError {
-                        Map<String,String> param = new HashMap<>();
-                        param.put("name", imageFolderaNew.toString());
-                        param.put("image", imgToString(bitmap));
+                });
 
-                        return param;
-                    }
-                };
-
-                MySingleton.getInstance(PostActivity.this).addToRequestQue(stringRequest);
+                MySingleton.getInstance(PostActivity.this).addToRequestQue(jsonRequest);
 
             }
-        }else{
-            Snackbar.make(getWindow().getDecorView().getRootView(), "Nessuna file multimediale inserito", Snackbar.LENGTH_SHORT)
-                    .show();
-        }
     }
 
     //Upload Video
     public void uploadVideo(String folderName){
+
         jsonObject = new JSONObject();
+        HashMap<String, String> params = new HashMap<String, String>();
+        Bundle bundle = getIntent().getExtras();
+        if(getIntent().getExtras()!=null){
+            lat = bundle.getDouble("latitude");
+            lng = bundle.getDouble("longitude");
+        }
 
         File videoFolder = new File(Environment.getExternalStorageDirectory().getPath() + "/" +
                 FileInformation.ROOT_FOLDER + "/" + FileInformation.NOTES_FOLDER + "/" + folderName);
@@ -662,50 +681,52 @@ public class PostActivity extends AppCompatActivity {
                 FileInformation.ROOT_FOLDER + "/" + FileInformation.NOTES_FOLDER + "/" + folderName + "/" + FileInformation.VIDEOS);
 
         File[] list = videoFolderaNew.listFiles();
-        if(list!=null){
-            for(File f: list){
-                StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
-                        new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String response) {
-                                try {
-                                    JSONObject jsonObject = new JSONObject(response);
-                                    String Response = jsonObject.getString("response");
-                                    Toast.makeText(PostActivity.this, Response, Toast.LENGTH_LONG).show();
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
+        for(File f: list){
 
+            params.put("size", "1");
+            params.put("format", "mp4");
+            params.put("duration", "1");
+            params.put("width", "1");
+            params.put("height", "1");
+            params.put("bit_rate", "3");
+            params.put("frame_rate", "3");
+            params.put("video_data", vidToString(f));
+            params.put("latitude",  Double.toString(lat));
+            params.put("longitude", Double.toString(lng));
+
+            JsonObjectRequest jsonRequest = new JsonObjectRequest(URL + FileInformation.videos, new JSONObject(params),
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            try {
+                                response.getString("id");
+                            } catch (JSONException e) {
+                                e.printStackTrace();
                             }
-                        }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        //Log.i("Mysmart",""+error);
 
-                    }
-                }){
-                    @Override
-                    protected Map<String, String> getParams() throws AuthFailureError {
-                        Map<String,String> param = new HashMap<>();
-                        param.put("name", videoFolderaNew.toString());
-                        param.put("image", fileToString());
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
 
-                        return param;
-                    }
-                };
+                }
+            });
 
-                MySingleton.getInstance(PostActivity.this).addToRequestQue(stringRequest);
+            MySingleton.getInstance(PostActivity.this).addToRequestQue(jsonRequest);
 
-            }
-        }else{
-            Snackbar.make(getWindow().getDecorView().getRootView(), "Nessuna file multimediale inserito", Snackbar.LENGTH_SHORT)
-                    .show();
         }
     }
 
     //Upload Note vocali
     public void uploadMic(String folderName){
+
         jsonObject = new JSONObject();
+        HashMap<String, String> params = new HashMap<String, String>();
+        Bundle bundle = getIntent().getExtras();
+        if(getIntent().getExtras()!=null){
+            lat = bundle.getDouble("latitude");
+            lng = bundle.getDouble("longitude");
+        }
 
         File micFolder = new File(Environment.getExternalStorageDirectory().getPath() + "/" +
                 FileInformation.ROOT_FOLDER + "/" + FileInformation.NOTES_FOLDER + "/" + folderName);
@@ -713,66 +734,63 @@ public class PostActivity extends AppCompatActivity {
                 FileInformation.ROOT_FOLDER + "/" + FileInformation.NOTES_FOLDER + "/" + folderName + "/" + FileInformation.AUDIO);
 
         File[] list = micFolderaNew.listFiles();
-        if(list!=null){
-            for(File f: list){
-                StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
-                        new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String response) {
-                                try {
-                                    JSONObject jsonObject = new JSONObject(response);
-                                    String Response = jsonObject.getString("response");
-                                    Toast.makeText(PostActivity.this, Response, Toast.LENGTH_LONG).show();
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
+        for(File f: list){
 
+            params.put("size", "1");
+            params.put("format", "3gp");
+            params.put("duration", "1");
+            params.put("bit_rate", "1");
+            params.put("audio_data", micToString(f));
+            params.put("latitude",  Double.toString(lat));
+            params.put("longitude", Double.toString(lng));
+
+
+            JsonObjectRequest jsonRequest = new JsonObjectRequest(URL + FileInformation.audios, new JSONObject(params),
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            try {
+                                response.getString("id");
+                            } catch (JSONException e) {
+                                e.printStackTrace();
                             }
-                        }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
 
-                    }
-                }){
-                    @Override
-                    protected Map<String, String> getParams() throws AuthFailureError {
-                        Map<String,String> param = new HashMap<>();
-                        param.put("name", micFolderaNew.toString());
-                        param.put("image", fileToString());
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
 
-                        return param;
-                    }
-                };
+                }
+            });
 
-                MySingleton.getInstance(PostActivity.this).addToRequestQue(stringRequest);
+            MySingleton.getInstance(PostActivity.this).addToRequestQue(jsonRequest);
 
-            }
-        }else{
-            Snackbar.make(getWindow().getDecorView().getRootView(), "Nessuna file multimediale inserito", Snackbar.LENGTH_SHORT)
-                    .show();
         }
     }
 
     //Upload Nota scritta
     public void uploadNota(String folderName){
+
+        String text = readFile().toString();
+        Bundle bundle = getIntent().getExtras();
+        if(getIntent().getExtras()!=null){
+            lat = bundle.getDouble("latitude");
+            lng = bundle.getDouble("longitude");
+        }
+
         jsonObject = new JSONObject();
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("content", text);
+        params.put("latitude", Double.toString(lat));
+        params.put("longitude", Double.toString(lng));
 
-        File noteFolder = new File(Environment.getExternalStorageDirectory().getPath() + "/" +
-                FileInformation.ROOT_FOLDER + "/" + FileInformation.NOTES_FOLDER + "/" + folderName);
-        final File noteFolderaNew = new File(Environment.getExternalStorageDirectory().getPath() + "/" +
-                FileInformation.ROOT_FOLDER + "/" + FileInformation.NOTES_FOLDER + "/" + folderName + "/" + FileInformation.NOTES);
 
-        File[] list = noteFolderaNew.listFiles();
-        if(list!=null){
-            for(File f: list){
-                StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
-                        new Response.Listener<String>() {
+        JsonObjectRequest jsonRequest = new JsonObjectRequest(URL + FileInformation.texts, new JSONObject(params),
+                        new Response.Listener<JSONObject>() {
                             @Override
-                            public void onResponse(String response) {
+                            public void onResponse(JSONObject response) {
                                 try {
-                                    JSONObject jsonObject = new JSONObject(response);
-                                    String Response = jsonObject.getString("response");
-                                    Toast.makeText(PostActivity.this, Response, Toast.LENGTH_LONG).show();
+                                    response.getString("id");
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -783,24 +801,10 @@ public class PostActivity extends AppCompatActivity {
                     public void onErrorResponse(VolleyError error) {
 
                     }
-                }){
-                    @Override
-                    protected Map<String, String> getParams() throws AuthFailureError {
-                        Map<String,String> param = new HashMap<>();
-                        param.put("name", noteFolderaNew.toString());
-                        param.put("image", fileToString());
+                });
 
-                        return param;
-                    }
-                };
+        MySingleton.getInstance(PostActivity.this).addToRequestQue(jsonRequest);
 
-                MySingleton.getInstance(PostActivity.this).addToRequestQue(stringRequest);
-
-            }
-        }else{
-            Snackbar.make(getWindow().getDecorView().getRootView(), "Nessuna file multimediale inserito", Snackbar.LENGTH_SHORT)
-                    .show();
-        }
     }
 
     //Upload CSV
@@ -830,16 +834,7 @@ public class PostActivity extends AppCompatActivity {
 
                     }
 
-                    }){
-                    @Override
-                    protected Map<String, String> getParams() throws AuthFailureError {
-                        Map<String,String> param = new HashMap<>();
-                        param.put("name", "Informazioni.csv");
-                        param.put("image", fileToString());
-
-                        return param;
-                    }
-                };
+                    });
 
             MySingleton.getInstance(PostActivity.this).addToRequestQue(stringRequest);
 
@@ -850,8 +845,7 @@ public class PostActivity extends AppCompatActivity {
     }
 
     //Converto immagine in Stringa Base64
-    private String imgToString(Bitmap bitmap)
-    {
+    private String imgToString(Bitmap bitmap) {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
         byte[] imgBytes = byteArrayOutputStream.toByteArray();
@@ -860,11 +854,42 @@ public class PostActivity extends AppCompatActivity {
 
     }
 
-    private String fileToString(){
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        byte[] imgBytes = byteArrayOutputStream.toByteArray();
+    //Converto video in Stringa Base64
+    private String vidToString(File f){
+        byte[] byteBufferString = new byte[8192];
+        try {
+            FileInputStream v_input = new FileInputStream(f.getPath());
+            ByteArrayOutputStream objByteArrayOS = new ByteArrayOutputStream();
+            for (int readNum; (readNum = v_input.read(byteBufferString)) != -1;)
+            {
+                objByteArrayOS.write(byteBufferString, 0, readNum);
+                Log.d("videook", "vidToString: ok");
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return  Base64.encodeToString(byteBufferString, Base64.DEFAULT);
+    }
 
-        return Base64.encodeToString(imgBytes, Base64.DEFAULT);
+    //Converto vocale in Stringa Base64
+    private String micToString(File f){
+        byte[] file = new byte[0];
+        try {
+            file = FileUtils.readFileToByteArray(f);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return Base64.encodeToString(file, Base64.DEFAULT);
+    }
+
+    private String fileToString(File f){
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        byte[] file = byteArrayOutputStream.toByteArray();
+
+        return Base64.encodeToString(file, Base64.DEFAULT);
     }
 
     //Controllo che ci siano foto da uppare
@@ -915,6 +940,9 @@ public class PostActivity extends AppCompatActivity {
         else return false;
     }
 
+
+    //Chiede all'utente se è sicuro di tornare indietro quando sono presenti o foto o video o nota vocale/scritta in quanto i dati andrebbero
+    //  persi
     public Dialog onCreateDialog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(PostActivity.this);
         builder.setMessage(R.string.dialog_message_post)
@@ -940,5 +968,59 @@ public class PostActivity extends AppCompatActivity {
             Dialog alert = onCreateDialog();
             alert.show();
         }
+    }
+
+    //Leggo contenuto nota scritta -> Metodo di appoggio
+    private StringBuilder readFile (){
+        final String path = Environment.getExternalStorageDirectory().getPath() + "/" +
+                FileInformation.ROOT_FOLDER + "/" + FileInformation.NOTES_FOLDER + "/" + folderName + "/" + FileInformation.NOTES;
+
+        String fileName= "Nota.txt";
+
+        StringBuilder text = new StringBuilder();
+        File file = new File(path, fileName);
+        int numRighe = contaRighe(file);
+        int count=0;
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            String line;
+            while ((line = br.readLine()) != null) {
+                count++;
+                if(numRighe==1){
+                    text.append(line);
+                }
+                else{
+                    if(count == numRighe){
+                        text.append(line);
+                    }
+                    else{
+                        text.append(line);
+                        text.append('\n');
+                    }
+
+                }
+            }
+            br.close();
+        }
+        catch (IOException e) {
+            //You'll need to add proper error handling here
+        }
+        return text;
+    }
+
+    //conto righe all'interno della nota scritta -> metodo di appoggio
+    public int contaRighe(File file){
+        int count=0;
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            String line;
+            while ((line = br.readLine()) != null) {
+                count++;
+            }
+            br.close();
+        }catch (IOException e) {
+            //You'll need to add proper error handling here
+        }
+        return count;
     }
 }
