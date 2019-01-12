@@ -9,6 +9,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.os.Bundle;
@@ -46,6 +47,8 @@ import java.util.Map;
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+
+    public static final int REQUEST_UPLOAD = 15;
 
     private static final String TAG = MapsActivity.class.getSimpleName();
     private static final String KEY_CAMERA_POSITION = "camera_position";
@@ -102,7 +105,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     intent.putExtra("latitude", mLastKnownLocation.getLatitude());
                     intent.putExtra("longitude", mLastKnownLocation.getLongitude());
                 }
-                startActivity(intent);
+                startActivityForResult(intent, REQUEST_UPLOAD);
             }
         });
     }
@@ -225,5 +228,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if(resultCode == RESULT_OK && requestCode == REQUEST_UPLOAD){
+            Snackbar.make(getWindow().getDecorView().getRootView(), "Caricamento avvenuto con successo", Snackbar.LENGTH_LONG)
+                    .show();
+        }
+    }
 }

@@ -2,6 +2,7 @@ package com.example.andreacarubelli.urbanstoriessharing;
 
 import android.Manifest;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,6 +15,7 @@ import android.media.MediaMetadataRetriever;
 import android.media.MediaRecorder;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -58,6 +60,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -93,6 +96,8 @@ public class PostActivity extends AppCompatActivity {
     private JSONObject jsonObject;
 
     String URL = "http://192.168.2.4:8001/api/";
+
+    ProgressDialog progressdialog;
 
 
     @Override
@@ -220,6 +225,8 @@ public class PostActivity extends AppCompatActivity {
         invia.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (controllaNota()) new UploadFile().execute();
+                /*
                 createCSV();
                 if(controllaNota()){
                     uploadNota(folderName);
@@ -228,8 +235,7 @@ public class PostActivity extends AppCompatActivity {
                     if(controllaVocali()) uploadMic(folderName);
                     //uploadCSV(folderName);
                 }
-
-
+                */
             }
         });
 
@@ -237,6 +243,8 @@ public class PostActivity extends AppCompatActivity {
         final TextView textNumVideo = findViewById(R.id.textNumVideo);
         final TextView textNumVocali = findViewById(R.id.textNumVocali);
 
+
+        invia.setVisibility(View.INVISIBLE);
         textNumFoto.setVisibility(View.INVISIBLE);
         textNumVideo.setVisibility(View.INVISIBLE);
         textNumVocali.setVisibility(View.INVISIBLE);
@@ -256,6 +264,10 @@ public class PostActivity extends AppCompatActivity {
     protected void onRestart() {
         super.onRestart();
         setNumFile();
+        TextView invia = findViewById(R.id.invia);
+        if (controllaNota()){
+            invia.setVisibility(View.VISIBLE);
+        }else invia.setVisibility(View.INVISIBLE);
     }
 
     private void getCameraPermission() {
@@ -1043,4 +1055,44 @@ public class PostActivity extends AppCompatActivity {
         }
         return count;
     }
+
+
+    //ASYNCTASK QUANDO VENGONO UPPATI I FILE
+    private class UploadFile extends AsyncTask<String, Integer, String>{
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressdialog = new ProgressDialog(PostActivity.this);
+            progressdialog.setTitle("Upload");
+            progressdialog.setMessage("Sto caricando i dati! Attendi...");
+            progressdialog.setIndeterminate(true);
+            //progressdialog.setMax(100);
+            //progressdialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            progressdialog.show();
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            createCSV();
+            if (controllaNota()) {
+                uploadNota(folderName);
+                if (controllaFoto()) uploadImage(folderName);
+                if (controllaVideo()) uploadVideo(folderName);
+                if (controllaVocali()) uploadMic(folderName);
+                //uploadCSV(folderName);
+                setResult(RESULT_OK);
+                finish();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
+            progressdialog.setProgress(values[0]);
+
+        }
+    }
+
 }
