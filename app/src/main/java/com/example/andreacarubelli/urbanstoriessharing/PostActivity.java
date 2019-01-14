@@ -226,16 +226,8 @@ public class PostActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (controllaNota()) new UploadFile().execute();
-                /*
-                createCSV();
-                if(controllaNota()){
-                    uploadNota(folderName);
-                    if(controllaFoto()) uploadImage(folderName);
-                    if(controllaVideo()) uploadVideo(folderName);
-                    if(controllaVocali()) uploadMic(folderName);
-                    //uploadCSV(folderName);
-                }
-                */
+                else Snackbar.make(getWindow().getDecorView().getRootView(), "Per inviare, devi creare una nota testuale", Snackbar.LENGTH_LONG)
+                        .show();
             }
         });
 
@@ -243,8 +235,6 @@ public class PostActivity extends AppCompatActivity {
         final TextView textNumVideo = findViewById(R.id.textNumVideo);
         final TextView textNumVocali = findViewById(R.id.textNumVocali);
 
-
-        invia.setVisibility(View.INVISIBLE);
         textNumFoto.setVisibility(View.INVISIBLE);
         textNumVideo.setVisibility(View.INVISIBLE);
         textNumVocali.setVisibility(View.INVISIBLE);
@@ -264,10 +254,6 @@ public class PostActivity extends AppCompatActivity {
     protected void onRestart() {
         super.onRestart();
         setNumFile();
-        TextView invia = findViewById(R.id.invia);
-        if (controllaNota()){
-            invia.setVisibility(View.VISIBLE);
-        }else invia.setVisibility(View.INVISIBLE);
     }
 
     private void getCameraPermission() {
@@ -635,6 +621,11 @@ public class PostActivity extends AppCompatActivity {
             lng = bundle.getDouble("longitude");
         }
 
+        EditText addressText = (EditText) findViewById(R.id.addressEditText);
+        EditText nameText = (EditText) findViewById(R.id.nameEditText);
+        String address = addressText.getText().toString();
+        String namePlace = nameText.getText().toString();
+
         File imageFolder = new File(Environment.getExternalStorageDirectory().getPath() + "/" +
                 FileInformation.ROOT_FOLDER + "/" + FileInformation.NOTES_FOLDER + "/" + folderName);
         final File imageFolderaNew = new File(Environment.getExternalStorageDirectory().getPath() + "/" +
@@ -652,7 +643,8 @@ public class PostActivity extends AppCompatActivity {
                 params.put("image_data", imgToString(bitmap));
                 params.put("latitude",  Double.toString(lat));
                 params.put("longitude", Double.toString(lng));
-
+                params.put("Address", address);
+                params.put("Place", namePlace);
 
                 JsonObjectRequest jsonRequest = new JsonObjectRequest(URL + FileInformation.photos, new JSONObject(params),
                         new Response.Listener<JSONObject>() {
@@ -719,6 +711,14 @@ public class PostActivity extends AppCompatActivity {
             params.put("latitude",  Double.toString(lat));
             params.put("longitude", Double.toString(lng));
 
+            EditText addressText = (EditText) findViewById(R.id.addressEditText);
+            EditText nameText = (EditText) findViewById(R.id.nameEditText);
+            String address = addressText.getText().toString();
+            String namePlace = nameText.getText().toString();
+
+            params.put("Address", address);
+            params.put("Place", namePlace);
+
             JsonObjectRequest jsonRequest = new JsonObjectRequest(URL + FileInformation.videos, new JSONObject(params),
                     new Response.Listener<JSONObject>() {
                         @Override
@@ -777,6 +777,13 @@ public class PostActivity extends AppCompatActivity {
             params.put("latitude",  Double.toString(lat));
             params.put("longitude", Double.toString(lng));
 
+            EditText addressText = (EditText) findViewById(R.id.addressEditText);
+            EditText nameText = (EditText) findViewById(R.id.nameEditText);
+            String address = addressText.getText().toString();
+            String namePlace = nameText.getText().toString();
+
+            params.put("Address", address);
+            params.put("Place", namePlace);
 
             JsonObjectRequest jsonRequest = new JsonObjectRequest(URL + FileInformation.audios, new JSONObject(params),
                     new Response.Listener<JSONObject>() {
@@ -816,6 +823,14 @@ public class PostActivity extends AppCompatActivity {
         params.put("content", text);
         params.put("latitude", Double.toString(lat));
         params.put("longitude", Double.toString(lng));
+
+        EditText addressText = (EditText) findViewById(R.id.addressEditText);
+        EditText nameText = (EditText) findViewById(R.id.nameEditText);
+        String address = addressText.getText().toString();
+        String namePlace = nameText.getText().toString();
+
+        params.put("Address", address);
+        params.put("Place", namePlace);
 
 
         JsonObjectRequest jsonRequest = new JsonObjectRequest(URL + FileInformation.texts, new JSONObject(params),
@@ -1065,7 +1080,7 @@ public class PostActivity extends AppCompatActivity {
             super.onPreExecute();
             progressdialog = new ProgressDialog(PostActivity.this);
             progressdialog.setTitle("Upload");
-            progressdialog.setMessage("Sto caricando i dati! Attendi...");
+            progressdialog.setMessage("Sto caricando i dati. Attendi...");
             progressdialog.setIndeterminate(true);
             //progressdialog.setMax(100);
             //progressdialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
