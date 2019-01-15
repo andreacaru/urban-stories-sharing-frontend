@@ -95,7 +95,7 @@ public class PostActivity extends AppCompatActivity {
 
     private JSONObject jsonObject;
 
-    String URL = "http://192.168.2.4:8001/api/";
+    String URL = "http://192.168.2.6:8001/api/";
 
     ProgressDialog progressdialog;
 
@@ -643,8 +643,9 @@ public class PostActivity extends AppCompatActivity {
                 params.put("image_data", imgToString(bitmap));
                 params.put("latitude",  Double.toString(lat));
                 params.put("longitude", Double.toString(lng));
-                params.put("Address", address);
-                params.put("Place", namePlace);
+
+                params.put("address", address);
+                params.put("place", namePlace);
 
                 JsonObjectRequest jsonRequest = new JsonObjectRequest(URL + FileInformation.photos, new JSONObject(params),
                         new Response.Listener<JSONObject>() {
@@ -716,8 +717,8 @@ public class PostActivity extends AppCompatActivity {
             String address = addressText.getText().toString();
             String namePlace = nameText.getText().toString();
 
-            params.put("Address", address);
-            params.put("Place", namePlace);
+            params.put("address", address);
+            params.put("place", namePlace);
 
             JsonObjectRequest jsonRequest = new JsonObjectRequest(URL + FileInformation.videos, new JSONObject(params),
                     new Response.Listener<JSONObject>() {
@@ -782,8 +783,8 @@ public class PostActivity extends AppCompatActivity {
             String address = addressText.getText().toString();
             String namePlace = nameText.getText().toString();
 
-            params.put("Address", address);
-            params.put("Place", namePlace);
+            params.put("address", address);
+            params.put("place", namePlace);
 
             JsonObjectRequest jsonRequest = new JsonObjectRequest(URL + FileInformation.audios, new JSONObject(params),
                     new Response.Listener<JSONObject>() {
@@ -829,8 +830,8 @@ public class PostActivity extends AppCompatActivity {
         String address = addressText.getText().toString();
         String namePlace = nameText.getText().toString();
 
-        params.put("Address", address);
-        params.put("Place", namePlace);
+        params.put("address", address);
+        params.put("place", namePlace);
 
 
         JsonObjectRequest jsonRequest = new JsonObjectRequest(URL + FileInformation.texts, new JSONObject(params),
@@ -904,11 +905,21 @@ public class PostActivity extends AppCompatActivity {
 
     //Converto video in Stringa Base64
     private String vidToString(File f){
+        Uri uri = FileProvider.getUriForFile(this, "com.example.android.fileprovider", f);
         byte[] byteBufferString = new byte[8192];
+        InputStream inputStream = null;
+        try
+        {
+            inputStream = getContentResolver().openInputStream(uri);
+        }
+        catch (FileNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+        ByteArrayOutputStream objByteArrayOS = new ByteArrayOutputStream();
         try {
-            FileInputStream v_input = new FileInputStream(f.getPath());
-            ByteArrayOutputStream objByteArrayOS = new ByteArrayOutputStream();
-            for (int readNum; (readNum = v_input.read(byteBufferString)) != -1;)
+            //FileInputStream v_input = new FileInputStream(uri);
+            for (int readNum; (readNum = inputStream.read(byteBufferString)) != -1;)
             {
                 objByteArrayOS.write(byteBufferString, 0, readNum);
             }
@@ -917,7 +928,13 @@ public class PostActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return  Base64.encodeToString(byteBufferString, Base64.DEFAULT);
+        String videoData="";
+        String baseVideo="";
+        videoData = Base64.encodeToString(objByteArrayOS.toByteArray(), Base64.DEFAULT);
+        String sinSaltoFinal2 = videoData.trim();
+        String sinsinSalto2 = sinSaltoFinal2.replaceAll("\n", "");
+        baseVideo = sinsinSalto2;
+        return  baseVideo;
     }
 
     //Converto vocale in Stringa Base64
