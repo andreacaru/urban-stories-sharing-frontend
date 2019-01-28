@@ -35,14 +35,14 @@ public class SavingOfFile implements FileInformation {
         File imageFolder = new File(Environment.getExternalStorageDirectory().getPath() + "/" +
                 FileInformation.ROOT_FOLDER + "/" + FileInformation.NOTES_FOLDER + "/" + folderName);
         if(!imageFolder.exists()) {
-            imageFolder.mkdir();
+            imageFolder.mkdirs();
             MediaScannerConnection.scanFile(context, new String[]{imageFolder.toString()}, null, null);
         }
 
         File imageFolderNew = new File(Environment.getExternalStorageDirectory().getPath() + "/" +
                 FileInformation.ROOT_FOLDER + "/" + FileInformation.NOTES_FOLDER + "/" + folderName + "/" + FileInformation.PICTURES);
         if(!imageFolderNew.exists()) {
-            imageFolderNew.mkdir();
+            imageFolderNew.mkdirs();
             MediaScannerConnection.scanFile(context, new String[]{imageFolderNew.toString()}, null, null);
         }
 
@@ -56,7 +56,7 @@ public class SavingOfFile implements FileInformation {
                 FileInformation.ROOT_FOLDER + "/" + FileInformation.NOTES_FOLDER + "/" + folderName);
 
         if (!videoFolder.exists()) {
-            videoFolder.mkdir();
+            videoFolder.mkdirs();
             MediaScannerConnection.scanFile(context, new String[]{videoFolder.toString()}, null, null);
         }
 
@@ -64,7 +64,7 @@ public class SavingOfFile implements FileInformation {
                 FileInformation.ROOT_FOLDER + "/" + FileInformation.NOTES_FOLDER + "/" + folderName + "/" + FileInformation.VIDEOS);
 
         if (!videoFolderNew.exists()) {
-            videoFolderNew.mkdir();
+            videoFolderNew.mkdirs();
             MediaScannerConnection.scanFile(context, new String[]{videoFolderNew.toString()}, null, null);
         }
 
@@ -78,14 +78,14 @@ public class SavingOfFile implements FileInformation {
         File micFolder = new File(Environment.getExternalStorageDirectory().getPath() + "/" +
                 FileInformation.ROOT_FOLDER + "/" + FileInformation.NOTES_FOLDER + "/" + folderName);
         if(!micFolder.exists()) {
-            micFolder.mkdir();
+            micFolder.mkdirs();
             MediaScannerConnection.scanFile(context, new String[]{micFolder.toString()}, null, null);
         }
 
         File micFolderNew = new File(Environment.getExternalStorageDirectory().getPath() + "/" +
                 FileInformation.ROOT_FOLDER + "/" + FileInformation.NOTES_FOLDER + "/" + folderName + "/" + FileInformation.AUDIO);
         if(!micFolderNew.exists()) {
-            micFolderNew.mkdir();
+            micFolderNew.mkdirs();
             MediaScannerConnection.scanFile(context, new String[]{micFolderNew.toString()}, null, null);
         }
 
@@ -111,14 +111,14 @@ public class SavingOfFile implements FileInformation {
         File noteFolder = new File(Environment.getExternalStorageDirectory().getPath() + "/" +
                 FileInformation.ROOT_FOLDER + "/" + FileInformation.NOTES_FOLDER + "/" + folderName);
         if(!noteFolder.exists()) {
-            noteFolder.mkdir();
+            noteFolder.mkdirs();
             MediaScannerConnection.scanFile(context, new String[]{noteFolder.toString()}, null, null);
         }
 
         File noteFolderNew = new File(Environment.getExternalStorageDirectory().getPath() + "/" +
                 FileInformation.ROOT_FOLDER + "/" + FileInformation.NOTES_FOLDER + "/" + folderName + "/" + FileInformation.NOTES);
         if(!noteFolderNew.exists()) {
-            noteFolderNew.mkdir();
+            noteFolderNew.mkdirs();
             MediaScannerConnection.scanFile(context, new String[]{noteFolderNew.toString()}, null, null);
         }
 
