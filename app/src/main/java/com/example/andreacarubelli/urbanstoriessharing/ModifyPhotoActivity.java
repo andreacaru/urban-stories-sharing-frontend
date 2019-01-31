@@ -2,42 +2,30 @@ package com.example.andreacarubelli.urbanstoriessharing;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.Image;
-import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.app.Activity;
 import android.os.Environment;
 import android.support.design.button.MaterialButton;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 
 
 import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-
-import com.google.android.gms.common.api.internal.ListenerHolder;
 
 import java.io.File;
 import java.util.ArrayList;
 
-import static com.example.andreacarubelli.urbanstoriessharing.R.color.colorButton;
-
-public class ModifyPhoto extends Activity {
+public class ModifyPhotoActivity extends Activity {
     int numImgCancellate = 0;
 
     @SuppressLint("ResourceAsColor")
@@ -111,7 +99,7 @@ public class ModifyPhoto extends Activity {
     }
 
     public Dialog onCreateDialog(final File img){
-        AlertDialog.Builder builder = new AlertDialog.Builder(ModifyPhoto.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(ModifyPhotoActivity.this);
         builder.setMessage(R.string.vuoi_cancellare)
                 .setPositiveButton(R.string.cancella, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
@@ -119,7 +107,7 @@ public class ModifyPhoto extends Activity {
                         int numImmagine = intent.getExtras().getInt("numPhoto");
                         img.delete();
                         setResult(RESULT_OK, intent);
-                        ModifyPhoto.this.finish();
+                        ModifyPhotoActivity.this.finish();
                     }
                 })
                 .setNegativeButton(R.string.mantieni, new DialogInterface.OnClickListener() {

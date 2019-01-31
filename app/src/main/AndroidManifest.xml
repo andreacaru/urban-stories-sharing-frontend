@@ -70,13 +70,13 @@
             android:name=".TextNoteActivity"
             android:label="@string/title_activity_note" />
         <activity
-            android:name=".ModifyPhoto"
+            android:name=".ModifyPhotoActivity"
             android:label="@string/title_activity_modify_photo" />
         <activity
-            android:name=".ModifyVideo"
+            android:name=".ModifyVideoActivity"
             android:label="@string/title_activity_modify_video" />
         <activity
-            android:name=".ModifyVoiceNote"
+            android:name=".ModifyVoiceNoteActivity"
             android:label="@string/title_activity_modify_voice_note" />
     </application>
 
