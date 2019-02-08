@@ -85,7 +85,7 @@ public class PostActivity extends AppCompatActivity {
 
     private JSONObject jsonObject;
 
-    String URL = "http://192.168.2.6:8001/api/";
+    String URL = "http://192.168.2.4:8001/api/";
 
     ProgressDialog progressdialog;
 
