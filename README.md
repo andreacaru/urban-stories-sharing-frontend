@@ -1,1 +1,1 @@
-Lo stage si occupa della raccolta delle storie urbane attraverso la realizzazione di un'app Android.
+Applicazione Android che si occupa della raccolta delle storie urbane.
